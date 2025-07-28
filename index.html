@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treuss – A Energia Precede a Matéria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ------------------------------------- */
+    /* Mobile-First Refactor                 */
+    /* ------------------------------------- */
+    
+    /* Base Reset & Variables */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      /* Treuss Theme Colors */
+      --color-treuss-blue: #00CED1; /* Azul Vibrante */
+      --color-treuss-green: #3CB371; /* Verde Floresta */
+      --color-treuss-gold: #DAA520; /* Dourado Sutil */
+
+      /* Tintus Theme Colors */
+      --color-tintus-dark-gray: #4A4A4A; /* Cinza Escuro */
+      --color-tintus-dim-gray: #696969; /* Cinza Médio */
+      --color-tintus-red: #B22222; /* Vermelho Tijolo */
+      --color-tintus-brown: #8B4513; /* Marrom Escuro */
+
+      /* Terra Theme Colors */
+      --color-terra-purple: #800080; /* Roxo Profundo */
+      --color-terra-medium-purple: #9370DB; /* Roxo Médio Suave */
+      --color-terra-light-gray: #D3D3D3; /* Cinza Claro */
+      --color-terra-beige: #F5F5DC; /* Bege Quente */
+
+      /* Accent & Utility Colors */
+      --color-accent-white: #FFFFFF; /* Branco Puro */
+      --color-accent-gold: #FFD700; /* Dourado Vibrante para Destaques */
+
+      /* Typography */
+      --font-heading: 'Montserrat', sans-serif;
+      --font-subheading: 'Montserrat', sans-serif;
+      --font-body: 'Montserrat', sans-serif;
+      --font-quote: 'Playfair Display', serif;
+    }
+
+    /* Base Body Styles (Mobile First) */
+    html, body {
+      font-family: var(--font-body);
+      background: #0a0a0a;
+      color: #f5f5f5;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      height: 100%;
+      font-size: 16px;
+    }
+
+    /* Video Teaser Overlay */
+    #teaser-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    
+    #teaser-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .teaser-container {
+      width: 90%;
+      max-width: 900px;
+      position: relative;
+    }
+    
+    #teaser-video {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(218, 165, 32, 0.5);
+      outline: 2px solid var(--color-treuss-gold);
+      outline-offset: -2px;
+      background: #000;
+    }
+    
+    .teaser-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .skip-button, .replay-button {
+      background: rgba(218, 165, 32, 0.2);
+      color: var(--color-treuss-gold);
+      border: 2px solid var(--color-treuss-gold);
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .skip-button:hover, .replay-button:hover {
+      background: var(--color-treuss-gold);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+    }
+    
+    .teaser-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-treuss-gold);
+      text-shadow: 0 0 10px rgba(218, 165, 32, 0.8);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    .teaser-subtitle {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+    
+    .teaser-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+    
+    .teaser-close:hover {
+      background: var(--color-tintus-red);
+      transform: rotate(90deg);
+    }
+
+    /* General Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      background-color: var(--color-treuss-gold);
+      color: var(--color-tintus-dark-gray);
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+      border: none;
+      cursor: pointer;
+      font-size: 0.9em;
+      outline: none;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+
+    .btn:focus-visible {
+        outline: 3px solid var(--color-accent-white);
+        outline-offset: 3px;
+    }
+
+    .btn:hover {
+        background-color: var(--color-treuss-green);
+        color: var(--color-accent-white);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .cta-primary {
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      color: #000;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      box-shadow: 0 5px 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .cta-primary:hover {
+      background: linear-gradient(45deg, #ffed4e, #ffd700);
+      transform: scale(1.05);
+      box-shadow: 0 8px 15px rgba(255, 215, 0, 0.5);
+    }
+
+    /* Fixed Space Background */
+    .space-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      background:
+        radial-gradient(circle 1px at 30% 15%, white 0%, transparent 1px),
+        radial-gradient(circle 1px at 70% 25%, white 0%, transparent 1px),
+        radial-gradient(circle 1px at 50% 35%, white 0%, transparent 1px),
+        radial-gradient(circle 1px at 25% 65%, white 0%, transparent 1px),
+        radial-gradient(circle 1px at 75% 75%, white 0%, transparent 1px),
+        radial-gradient(circle 1px at 90% 40%, white 0%, transparent 1px),
+        radial-gradient(circle 0.5px at 20% 90%, white 0%, transparent 0.5px),
+        radial-gradient(circle 1px at 60% 80%, white 0%, transparent 1px),
+        radial-gradient(circle 0.5px at 85% 15%, white 0%, transparent 0.5px),
+        radial-gradient(circle 1px at 40% 60%, white 0%, transparent 1px),
+        linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Main Content Container */
+    .content-container {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Header */
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 15;
+      background:
+        radial-gradient(circle 200px at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 60%),
+        rgba(0, 0, 0, 0.3);
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 8vw, 3rem);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: linear-gradient(45deg, #ffd700, #fff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+      to { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+    }
+
+    header p {
+      font-size: 1em;
+      max-width: 90%;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      opacity: 0.9;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      color: #ffd700;
+      font-size: 1.5rem;
+      animation: bounce 2s infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-5px); }
+      60% { transform: translateX(-50%) translateY(-3px); }
+    }
+
+    /* Planet Sections */
+    .planet-section {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      position: relative;
+      z-index: 15;
+      background-size: cover;
+      background-position: center;
+      background-attachment: scroll;
+      text-align: center;
+    }
+
+    .planet-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    /* Specific Planet Backgrounds */
+    .planet-section.tintus {
+      background-image: url('tintus.jpg');
+    }
+
+    .planet-section.tintus::before {
+      background: rgba(139, 0, 0, 0.4);
+    }
+
+    .planet-section.terra {
+      background-image: url('terra.jpg');
+    }
+
+    .planet-section.terra::before {
+      background: rgba(0, 100, 139, 0.4);
+    }
+
+    .planet-section.treuss {
+      background-image: url('treuss-3.jpg');
+    }
+
+    .planet-section.treuss::before {
+      background: rgba(139, 107, 0, 0.4);
+    }
+
+    /* Planet Content Card */
+    .planet-content {
+      max-width: 95%;
+      width: 100%;
+      text-align: center;
+      background: rgba(15, 15, 15, 0.9);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow:
+        0 10px 20px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+    }
+
+    .planet-content:hover {
+      transform: none;
+      box-shadow:
+        0 10px 20px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .planet-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .planet-content p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.95;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Specific Planet Content Card Colors */
+    .planet-content.tintus {
+      border-color: rgba(255, 80, 80, 0.6);
+      background: rgba(25, 10, 10, 0.5);
+    }
+
+    .planet-content.tintus h2 {
+      color: #ff5050;
+      text-shadow: 0 0 15px rgba(255, 80, 80, 0.8);
+    }
+
+    .planet-content.tintus:hover {
+      border-color: rgba(255, 80, 80, 0.9);
+      box-shadow:
+        0 20px 40px rgba(255, 80, 80, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .planet-content.terra {
+      border-color: rgba(30, 144, 255, 0.6);
+      background: rgba(10, 15, 25, 0.5);
+    }
+
+    .planet-content.terra h2 {
+      color: #1e90ff;
+      text-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
+    }
+
+    .planet-content.terra:hover {
+      border-color: rgba(30, 144, 255, 0.9);
+      box-shadow:
+        0 20px 40px rgba(30, 144, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .planet-content.treuss {
+      border-color: rgba(255, 215, 0, 0.6);
+      background: rgba(25, 20, 10, 0.5);
+    }
+
+    .planet-content.treuss h2 {
+      color: #ffd700;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+
+    .planet-content.treuss:hover {
+      border-color: rgba(255, 215, 0, 0.9);
+      box-shadow:
+        0 20px 40px rgba(255, 215, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Reflection Section */
+    .reflection-section {
+      text-align: center !important;
+      padding: 4rem 1.5rem;
+      /* Fundo com gradiente suave do preto para azul escuro, evocando profundidade espacial */
+      background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 15;
+    }
+
+    .section-title {
+      font-size: 2em;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #ffd700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .highlight-quote {
+      text-align: center;
+      font-family: var(--font-quote);
+      font-style: italic;
+      font-size: 1.5em;
+      color: #ffd700;
+      margin: 2rem 0;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.4;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    .reflection-section p {
+      max-width: 90%;
+      margin: 0 auto;
+      font-size: 1em;
+      line-height: 1.6;
+    }
+
+    /* Offer Section */
+    .offer-section {
+      padding: 4rem 1rem;
+      /* Gradiente com tons de azul e dourado para destacar a importância das opções de compra */
+      background: linear-gradient(135deg, #1a1a2e, var(--color-treuss-gold));
+      position: relative;
+      z-index: 15;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: rgba(26, 26, 26, 0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      width: 95%;
+      max-width: 350px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: none;
+      border-color: rgba(255, 215, 0, 0.6);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    .card p {
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      opacity: 0.9;
+      font-size: 0.95em;
+    }
+
+    /* Author Section */
+    .author-section {
+      padding: 4rem 1.5rem;
+      /* Gradiente neutro com tons de cinza escuro para manter o foco no texto */
+      background: linear-gradient(135deg, var(--color-tintus-dark-gray), #3a3a4e);
+      color: #f5f5f5;
+      text-align: center;
+    }
+
+    .author-section h2 {
+      font-size: 2em;
+      color: #ffd700;
+      margin-bottom: 1.5rem;
+    }
+
+    .author-section p {
+      max-width: 90%;
+      margin: 0 auto;
+      font-size: 1em;
+      line-height: 1.7;
+    }
+
+    /* Events Section */
+    .events-section {
+      padding: 4rem 1rem;
+      /* Gradiente com tons de azul e cinza, remetendo ao espaço com sutileza */
+      background: linear-gradient(135deg, var(--color-treuss-blue), #4a4a5e);
+      text-align: center;
+    }
+
+    .event-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      max-width: 500px;
+      color: #f5f5f5;
+      text-align: left;
+    }
+
+    .event-card h3 {
+      font-size: 1.2em;
+      margin-bottom: 0.8em;
+    }
+
+    .event-card p {
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    /* Purchase Section */
+    #compra {
+        scroll-margin-top: 20px;
+        background: linear-gradient(to bottom, var(--color-terra-medium-purple), var(--color-tintus-dim-gray));
+        color: var(--color-accent-white);
+        padding: 50px 1rem;
+        position: relative;
+        z-index: 15;
+    }
+
+    #compra h2 {
+      font-size: 1.8em;
+      margin-bottom: 2rem;
+    }
+
+    .compra-content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .book-cover {
+        width: 100%;
+        max-width: 250px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .book-cover img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .purchase-form {
+        width: 100%;
+        max-width: 450px;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        padding: 25px;
+        text-align: left;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .purchase-form h3 {
+        margin-bottom: 1em;
+        text-align: center;
+        color: var(--color-accent-white);
+        font-family: var(--font-heading);
+        font-size: 1.3em;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-family: var(--font-subheading);
+        color: var(--color-terra-light-gray);
+        font-size: 0.9em;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="number"],
+    .form-group input[type="tel"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: rgba(0, 0, 0, 0.4);
+        color: var(--color-accent-white);
+        border-radius: 5px;
+        font-size: 0.9em;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color: var(--color-treuss-gold);
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .pix-info {
+        background-color: rgba(60, 179, 113, 0.1);
+        border: 1px solid var(--color-treuss-green);
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: center;
+        color: var(--color-accent-white);
+        font-family: var(--font-body);
+    }
+
+    .pix-info p {
+        margin-bottom: 8px;
+        font-size: 0.9em;
+    }
+
+    .pix-info strong {
+        color: var(--color-treuss-gold);
+        font-size: 1em;
+    }
+
+    .form-message {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: 700;
+        text-align: center;
+        font-size: 0.9em;
+    }
+
+    .form-message.error {
+        background-color: var(--color-tintus-red);
+        color: var(--color-accent-white);
+    }
+
+    .form-message.success {
+        background-color: var(--color-treuss-green);
+        color: var(--color-accent-white);
+    }
+
+    /* Footer */
+    footer {
+        background-color: var(--color-tintus-dark-gray);
+        color: var(--color-terra-light-gray);
+        text-align: center;
+        padding: 30px 1rem;
+        font-size: 0.8em;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 15;
+    }
+
+    footer .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .social-links {
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+    .social-links a {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 1.5em;
+        color: var(--color-terra-light-gray);
+        transition: color 0.3s ease, transform 0.3s ease;
+        text-decoration: none;
+    }
+
+    .social-links a:hover {
+        color: var(--color-treuss-gold);
+        transform: scale(1.1);
+    }
+
+    .social-links i {
+        width: 1em;
+        text-align: center;
+    }
+
+    footer a {
+        color: var(--color-treuss-gold);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: var(--color-accent-white);
+    }
+
+    footer p {
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+
+    /* Tablet and Desktop Styles */
+    @media (min-width: 768px) {
+      body {
+        font-size: 17px;
+      }
+
+      .container {
+        padding: 0 20px;
+      }
+
+      .btn {
+        padding: 15px 30px;
+        font-size: 1.1em;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .cta-primary {
+        padding: 1.2rem 3rem;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+      }
+      .cta-primary:hover {
+        transform: scale(1.08);
+        box-shadow: 0 15px 30px rgba(255, 215, 0, 0.5);
+      }
+
+      header {
+        padding: 0 2rem;
+        background: radial-gradient(circle 400px at 50% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 60%), rgba(0, 0, 0, 0.3);
+      }
+
+      header h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+      }
+
+      @keyframes glow {
+        from { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+        to { filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8)); }
+      }
+
+      header p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .scroll-indicator {
+        bottom: 30px;
+        font-size: 2rem;
+      }
+
+      .planet-section {
+        min-height: 100vh;
+        padding: 4rem 2rem;
+        background-attachment: fixed;
+      }
+
+      .planet-section.tintus {
+        justify-content: flex-end;
+        padding-right: 10%;
+      }
+
+      .planet-section.terra {
+        justify-content: flex-start;
+        padding-left: 10%;
+      }
+
+      .planet-section.treuss {
+        justify-content: flex-end;
+        padding-right: 10%;
+      }
+
+      .planet-content {
+        max-width: 500px;
+        padding: 3rem;
+        border-radius: 20px;
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.7),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .planet-content:hover {
+        transform: translateY(-15px) scale(1.05);
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.8),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+
+      .planet-content h2 {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 3px;
+      }
+
+      .planet-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .reflection-section {
+        padding: 8rem 2rem;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      }
+
+      .highlight-quote {
+        font-size: 2rem;
+        margin: 3rem 0;
+        max-width: 800px;
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      }
+
+      .reflection-section p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+      }
+
+      .offer-section {
+        padding: 8rem 2rem;
+      }
+
+      .cards-container {
+        flex-direction: row;
+        gap: 3rem;
+      }
+
+      .card {
+        padding: 3rem;
+        border-radius: 20px;
+        flex: 1 1 350px;
+        max-width: 400px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      }
+
+      .card:hover {
+        transform: translateY(-15px);
+        border-color: rgba(255, 215, 0, 0.6);
+        box-shadow: 0 30px 60px rgba(255, 215, 0, 0.2);
+      }
+
+      .card h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      }
+
+      .card p {
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        font-size: 1.1rem;
+      }
+
+      .author-section {
+        padding: 8rem 2rem;
+      }
+
+      .author-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .author-section p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+      }
+
+      .events-section {
+        padding: 8rem 2rem;
+      }
+
+      .event-card {
+        padding: 2rem;
+        max-width: 600px;
+      }
+
+      .event-card h3 {
+        font-size: 1.5em;
+      }
+
+      .event-card p {
+        font-size: 1em;
+      }
+
+      #compra {
+        padding: 80px 5%;
+      }
+
+      #compra h2 {
+        font-size: 2em;
+        margin-bottom: 3em;
+      }
+
+      .compra-content {
+        flex-direction: row;
+        gap: 50px;
+      }
+
+      .book-cover {
+        flex: 1 1 300px;
+        max-width: 350px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        border-radius: 10px;
+      }
+
+      .purchase-form {
+        flex: 2 1 450px;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .purchase-form h3 {
+        margin-bottom: 1.5em;
+        font-size: 1.5em;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        margin-bottom: 8px;
+        font-size: 0.95em;
+      }
+
+      .form-group input[type="text"],
+      .form-group input[type="email"],
+      .form-group input[type="number"],
+      .form-group input[type="tel"] {
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 1em;
+      }
+
+      .pix-info {
+        padding: 20px;
+        margin-top: 30px;
+      }
+
+      .pix-info p {
+        margin-bottom: 10px;
+        font-size: 1em;
+      }
+
+      .pix-info strong {
+        font-size: 1.1em;
+      }
+
+      .form-message {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1em;
+      }
+
+      footer {
+        padding: 40px 5%;
+        font-size: 0.9em;
+      }
+
+      .social-links {
+        margin-top: 20px;
+        margin-bottom: 30px;
+      }
+
+      .social-links a {
+        margin: 0 15px;
+        font-size: 1.8em;
+      }
+
+      .social-links a:hover {
+        transform: scale(1.2);
+      }
+
+      footer p {
+        margin-bottom: 10px;
+        line-height: 1.6;
+      }
+      
+      /* Teaser adjustments for desktop */
+      .teaser-title {
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+      }
+      
+      .teaser-subtitle {
+        font-size: 1.3rem;
+        max-width: 70%;
+      }
+    }
+
+    /* Accessibility (Reduced Motion) */
+    @media (prefers-reduced-motion: reduce) {
+      .space-background {
+        background-attachment: scroll;
+        animation: none;
+      }
+      .scroll-indicator {
+        animation: none;
+      }
+      header h1 {
+        animation: none;
+      }
+      .planet-section {
+        background-attachment: scroll;
+      }
+      .planet-content, .card, .book-cover, .purchase-form {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Teaser Video Overlay -->
+  <div id="teaser-overlay">
+    <div class="teaser-container">
+      <button class="teaser-close" aria-label="Fechar vídeo">×</button>
+      <h1 class="teaser-title">Treuss - A Energia Precede a Matéria</h1>
+      <p class="teaser-subtitle">Uma jornada cósmica através de três planetas, onde cada escolha molda o destino de civilizações</p>
+      <video id="teaser-video" autoplay muted playsinline>
+        <source src="teaser_treuss.mp4" type="video/mp4">
+        Seu navegador não suporta vídeos HTML5.
+      </video>
+      <div class="teaser-controls">
+        <button class="skip-button" id="skip-teaser">Pular Introdução</button>
+        <button class="replay-button" id="replay-teaser">Assistir Novamente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-background"></div>
+
+  <div class="content-container">
+    <header>
+      <h1>Treuss – A Energia Precede a Matéria</h1>
+      <p>Uma ficção distópica iniciática sobre ética, consciência e transformação planetária. Um chamado à luz em tempos de colapso.</p>
+      <a href="#compra" class="btn">Quero meu exemplar</a>
+      <div class="scroll-indicator">↓</div>
+    </header>
+
+    <section class="planet-section tintus">
+      <div class="planet-content tintus">
+        <h2>Tintus</h2>
+        <p>Um mundo consumido pela ganância, pela hiperprodução e pelo controle. Um espelho do que evitamos ver. Neste planeta vermelho da destruição, a ambição desmedida corrompeu toda forma de vida, criando um ciclo infinito de consumo e devastação.</p>
+      </div>
+    </section>
+
+    <section class="planet-section terra">
+      <div class="planet-content terra">
+        <h2>Terra</h2>
+        <p>O campo de batalha. Um planeta à beira do colapso, mas ainda repleto de sementes de despertar. Aqui, entre o azul dos oceanos e o verde da esperança, decidimos nosso destino coletivo através de cada escolha individual.</p>
+      </div>
+    </section>
+
+    <section class="planet-section treuss">
+      <div class="planet-content treuss">
+        <h2>Treuss</h2>
+        <p>Tecnologia limpa, harmonia energética e sabedoria ancestral. É a vibração origination, o futuro possível. Este planeta dourado representa a síntese entre progresso e consciência, onde a tecnologia serve à vida.</p>
+      </div>
+    </section>
+
+    <section class="reflection-section">
+      <h2 class="section-title">Uma reflexão urgente</h2>
+      <div class="highlight-quote">
+        "Se despertarmos nosso potencial treussiano, lidaremos com a mais poderosa força do universo: a consciência coletiva."
+      </div>
+      <p style="max-width:700px; margin:0 auto; font-size:1.2rem; line-height:1.8;">
+        A Terra é o ponto de virada. O que escolhemos vibrar determina o mundo que cocriamos. A ética precede qualquer transformação.
+      </p>
+    </section>
+
+    <section class="offer-section">
+      <h2 class="section-title">Como acessar o livro</h2>
+      <div class="container cards-container">
+        <div class="card">
+          <h3>Livro Impresso</h3>
+          <p>Envio direto da autora. Pagamento via PIX.</p>
+          <a href="#compra" class="cta-primary">Comprar</a>
+        </div>
+        <div class="card">
+          <h3>eBook gratuito</h3>
+          <p>Um presente para quem deseja começar agora.</p>
+          <button class="cta-primary">Baixar eBook</button>
+          <p>(considere fazer uma contribuição)</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="author-section">
+      <h2>Sobre a autora</h2>
+      <p>
+        Anna Frota é educadora, artista e visionária. Seu mergulho nas esferas do invisível, aliado à escuta do mundo contemporâneo, deu origem à obra "Treuss". Ela convida o leitor a vibrar no fio sutil entre ficção e revelação.
+      </p>
+    </section>
+
+    <section class="events-section">
+      <h2 class="section-title">Lançamento e eventos</h2>
+      <div class="event-card">
+        <h3>📅 Lançamento oficial: 22 de setembro de 2025</h3>
+        <p>Presencial em Alphaville e online com teaser, leitura performática e conversa com a autora.</p>
+      </div>
+      <div class="event-card">
+        <h3>📡 Projeto Núcleo Base</h3>
+        <p>Encontros mensais online com leitores, artistas e estudiosos sobre os temas do livro.</p>
+      </div>
+    </section>
+
+    <section id="compra">
+        <div class="container">
+            <div class="compra-content">
+                <div class="book-cover">
+                    <picture>
+                        <source srcset="treuss_capa_livro.webp" type="image/webp">
+                        <img src="treuss_capa_livro.jpg" alt="Capa do Livro Treuss" loading="lazy">
+                    </picture>
+                </div>
+                <div class="purchase-form">
+                    <h3>DETALHES DA COMPRA VIA PIX</h3>
+                    <form id="purchaseForm">
+                        <div class="form-group">
+                            <label for="name">Nome Completo: <span aria-hidden="true">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="Seu nome completo" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail: <span aria-hidden="true">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefone (WhatsApp, opcional):</label>
+                            <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX" pattern="[0-9]{2} [0-9]{5}-[0-9]{4}|[0-9]{2} [0-9]{4}-[0-9]{4}">
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantidade de Livros: <span aria-hidden="true">*</span></label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" required aria-required="true">
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%;">FINALIZAR COMPRA & RECEBER DETALHES PIX</button>
+                        <div id="formMessage" class="form-message" style="display:none;" role="alert"></div>
+                        <div class="pix-info">
+                            <p>Após clicar em "Finalizar Compra", seu cliente de e-mail será aberto com os dados do pedido. Por favor, envie o e-mail para receber as instruções detalhadas do PIX e finalizar o pagamento.</p>
+                            <p>Valor por exemplar: <strong>R$ 56,00</strong></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+      <div class="container">
+          <p>&copy; 2025 Treuss - A Energia Precede a Matéria. Todos os direitos reservados.</p>
+          <div class="social-links">
+              <a href="#" target="_blank" title="Facebook" aria-label="Facebook">
+                  <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://instagram.com/treuss.energia" target="_blank" title="Instagram" aria-label="Instagram">
+                  <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" target="_blank" title="YouTube" aria-label="YouTube">
+                  <i class="fab fa-youtube"></i>
+              </a>
+              <a href="#" target="_blank" title="WhatsApp" aria-label="WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+              </a>
+          </div>
+          <p>
+              <a href="#privacy-policy">Política de Privacidade</a> |
+              <a href="mailto:contato@treusslivro.com">Contato</a>
+          </p>
+          <br>
+          <p style="color: #FFD700;">"O deserto não é lugar de parada, filho. Serve para estar só, situar-se e encontrar Deus. Ele é apenas uma passagem."</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Controle do teaser de vídeo
+    document.addEventListener('DOMContentLoaded', function() {
+      const teaserOverlay = document.getElementById('teaser-overlay');
+      const teaserVideo = document.getElementById('teaser-video');
+      const skipButton = document.getElementById('skip-teaser');
+      const replayButton = document.getElementById('replay-teaser');
+      const closeButton = document.querySelector('.teaser-close');
+      
+      // Se o usuário clicar em pular
+      skipButton.addEventListener('click', function() {
+        hideTeaser();
+      });
+      
+      // Quando o vídeo terminar
+      teaserVideo.addEventListener('ended', function() {
+        hideTeaser();
+      });
+      
+      // Botão para assistir novamente
+      replayButton.addEventListener('click', function() {
+        teaserVideo.currentTime = 0;
+        teaserVideo.play();
+        teaserOverlay.classList.remove('hide');
+      });
+      
+      // Botão de fechar
+      closeButton.addEventListener('click', function() {
+        hideTeaser();
+      });
+      
+      function hideTeaser() {
+        teaserOverlay.classList.add('hide');
+        // Pausar o vídeo
+        teaserVideo.pause();
+        
+        // Salvar no localStorage que o usuário já viu o vídeo
+        localStorage.setItem('treussTeaserShown', 'true');
+      }
+      
+      // Verificar se o usuário já viu o vídeo
+      if(localStorage.getItem('treussTeaserShown') === 'true') {
+        hideTeaser();
+      } else {
+        // Tentar reproduzir o vídeo automaticamente
+        teaserVideo.play().catch(error => {
+          console.log('Autoplay bloqueado:', error);
+          // Se autoplay for bloqueado, mostrar controles
+          skipButton.style.display = 'block';
+        });
+      }
+      
+      // Se o vídeo não puder ser carregado, esconda o overlay após um tempo (fallback)
+      teaserVideo.addEventListener('error', function() {
+        setTimeout(hideTeaser, 3000);
+      });
+    });
+    
+    // CORREÇÃO PARA O PROBLEMA DE SCROLL EM MOBILE
+    // Nova função para rolagem suave até o formulário
+    function scrollToCompraSection() {
+      const compraSection = document.getElementById('compra');
+      if (compraSection) {
+        // Calcula a posição da seção de compra
+        const elementPosition = compraSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - 20; // 20px de margem
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Atribuir a nova função aos botões relevantes
+    document.querySelectorAll('.btn[href="#compra"], .cta-primary').forEach(button => {
+      button.addEventListener('click', function(e) {
+        // Previne o comportamento padrão apenas em dispositivos móveis
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          scrollToCompraSection();
+        }
+      });
+    });
+
+    // Parallax suave para o fundo de estrelas
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const parallax = document.querySelector('.space-background');
+      const speed = 0.2;
+      parallax.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+
+    // Oculta o indicador de scroll após rolar
+    window.addEventListener('scroll', () => {
+      const indicator = document.querySelector('.scroll-indicator');
+      if (window.scrollY > 100) {
+        indicator.style.opacity = '0';
+        indicator.style.pointerEvents = 'none';
+      } else {
+        indicator.style.opacity = '0.7';
+        indicator.style.pointerEvents = 'auto';
+      }
+    });
+
+    // Animação suave ao aparecer na tela
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card, .planet-content').forEach(element => {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(50px)';
+            element.style.transition = 'all 0.6s ease';
+            observer.observe(element);
+        }
+    });
+
+    // Form Validation and Submission
+    document.getElementById('purchaseForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const quantity = document.getElementById('quantity').value;
+        const formMessage = document.getElementById('formMessage');
+
+        formMessage.style.display = 'none';
+        formMessage.textContent = '';
+        formMessage.className = 'form-message';
+
+        if (!name.trim() || !email.trim() || !quantity) {
+            showFormMessage('error', 'Por favor, preencha todos os campos obrigatórios (Nome, E-mail, Quantidade).');
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showFormMessage('error', 'Por favor, insira um e-mail válido.');
+            return;
+        }
+
+        if (parseInt(quantity) <= 0) {
+            showFormMessage('error', 'A quantidade de livros deve ser no mínimo 1.');
+            return;
+        }
+
+        const subject = encodeURIComponent('Pedido de Compra do Livro Treuss');
+        const body = encodeURIComponent(
+            `Olá, gostaria de comprar o livro "Treuss - A Energia Precede a Matéria".\n\n` +
+            `Nome Completo: ${name}\n` +
+            `E-mail: ${email}\n` +
+            `Telefone (WhatsApp): ${phone || 'Não informado'}\n` +
+            `Quantidade de Livros: ${quantity}\n\n` +
+            `Por favor, envie os detalhes para o pagamento via PIX.`
+        );
+
+        window.location.href = `mailto:contato@treusslivro.com?subject=${subject}&body=${body}`;
+
+        showFormMessage('success', 'Seu cliente de e-mail foi aberto. Por favor, envie o e-mail para finalizar o pedido!');
+
+        setTimeout(() => {
+            document.getElementById('purchaseForm').reset();
+            formMessage.style.display = 'none';
+        }, 5000);
+    });
+
+    function showFormMessage(type, message) {
+        const formMessage = document.getElementById('formMessage');
+        formMessage.style.display = 'block';
+        formMessage.className = `form-message ${type}`;
+        formMessage.textContent = message;
+    }
+  </script>
+</body>
+</html>
