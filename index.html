@@ -60,6 +60,44 @@
       font-size: 16px;
     }
 
+     /* Controles de Áudio */
+    .audio-controls {
+      position: absolute;
+      bottom: 90px;
+      right: 20px;
+      z-index: 1000;
+    }
+    
+    #audio-toggle {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--color-treuss-gold);
+      color: var(--color-treuss-gold);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    #audio-toggle:hover {
+      background: var(--color-treuss-gold);
+      color: #000;
+    }
+    
+    .audio-label {
+      position: absolute;
+      bottom: -25px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #fff;
+      opacity: 0.7;
+    }
+
     /* Video Teaser Overlay */
     #teaser-overlay {
       position: fixed;
@@ -1134,6 +1172,15 @@
       <button class="teaser-close" aria-label="Fechar vídeo">×</button>
       <h1 class="teaser-title">Treuss - A Energia Precede a Matéria</h1>
       <p class="teaser-subtitle">Uma jornada cósmica através de três planetas, onde cada escolha molda o destino de civilizações</p>
+
+      <!-- Controle de Áudio -->
+      <div class="audio-controls">
+        <button id="audio-toggle" aria-label="Ativar som">
+          <i class="fas fa-volume-mute"></i>
+        </button>
+        <div class="audio-label">Som</div>
+      </div>
+
       <video id="teaser-video" autoplay muted playsinline>
         <source src="teaser_treuss.mp4" type="video/mp4">
         Seu navegador não suporta vídeos HTML5.
@@ -1297,6 +1344,22 @@
       const skipButton = document.getElementById('skip-teaser');
       const replayButton = document.getElementById('replay-teaser');
       const closeButton = document.querySelector('.teaser-close');
+      const audioToggle = document.getElementById('audio-toggle');
+
+      // Controle de áudio
+      audioToggle.addEventListener('click', function() {
+        if (teaserVideo.muted) {
+          // Ativar som
+          teaserVideo.muted = false;
+          this.innerHTML = '<i class="fas fa-volume-up"></i>';
+          this.setAttribute('aria-label', 'Desativar som');
+        } else {
+          // Desativar som
+          teaserVideo.muted = true;
+          this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+          this.setAttribute('aria-label', 'Ativar som');
+        }
+      });
       
       // Se o usuário clicar em pular
       skipButton.addEventListener('click', function() {
