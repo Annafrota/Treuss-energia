@@ -1236,6 +1236,49 @@
     <section class="offer-section">
       <h2 class="section-title">Como acessar o livro</h2>
       <div class="container cards-container">
+    
+        <!-- Card eBook gratuito com formulário de download -->
+        <div class="card">
+          <h3>eBook Gratuito</h3>
+          <p>
+            Receba agora mesmo o PDF ou o link para a versão Kindle.
+            Nada de pressão: se quiser apoiar com uma contribuição, escolha o valor.
+          </p>
+          <form id="downloadForm" class="purchase-form" style="background: rgba(60, 179, 113, 0.1);">
+            <h3>Baixar eBook</h3>
+            <div class="form-group">
+              <label for="donorName">Nome Completo: <span aria-hidden="true">*</span></label>
+              <input type="text" id="donorName" name="donorName" placeholder="Seu nome completo" required>
+            </div>
+            <div class="form-group">
+              <label for="donorEmail">E-mail: <span aria-hidden="true">*</span></label>
+              <input type="email" id="donorEmail" name="donorEmail" placeholder="seu.email@exemplo.com" required>
+            </div>
+            <div class="form-group">
+              <label for="contribution">Contribuição (opcional):</label>
+              <input type="number" id="contribution" name="contribution" placeholder="R$ 0,00" min="0" step="0.01">
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Baixar Agora</button>
+            <div id="downloadMessage" class="form-message success" style="display:none;" role="alert"></div>
+          </form>
+        </div>
+    
+        <!-- Card Livro impresso -->
+        <div class="card">
+          <h3>Livro Impresso</h3>
+          <p>
+            Impressão sob demanda direto da autora.<br>
+            Valor por exemplar: <strong>R$ 56,00</strong>
+          </p>
+          <a href="#compra" class="cta-primary">Encomendar Cópia Física</a>
+        </div>
+    
+      </div>
+    </section>
+    
+    <!-- section class="Xoffer-section">
+      <h2 class="section-title">Como acessar o livro</h2>
+      <div class="container cards-container">
         <div class="card">
           <h3>Livro Impresso</h3>
           <p>Envio direto da autora. Pagamento via PIX.</p>
@@ -1248,7 +1291,7 @@
           <p>(considere fazer uma contribuição)</p>
         </div>
       </div>
-    </section>
+  </section --!>
 
     <section class="author-section">
       <h2>Sobre a autora</h2>
