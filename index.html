@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Treuss – A Energia Precede a Matéria</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital,wght@1,400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     /* ------------------------------------- */
     /* Mobile-First Refactor                 */
@@ -18,32 +23,48 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     :root {
       /* Treuss Theme Colors */
-      --color-treuss-blue: #00CED1; /* Azul Vibrante */
-      --color-treuss-green: #3CB371; /* Verde Floresta */
-      --color-treuss-gold: #DAA520; /* Dourado Sutil */
+      --color-treuss-blue: #00CED1;
+      /* Azul Vibrante */
+      --color-treuss-green: #3CB371;
+      /* Verde Floresta */
+      --color-treuss-gold: #DAA520;
+      /* Dourado Sutil */
       /* Tintus Theme Colors */
-      --color-tintus-dark-gray: #4A4A4A; /* Cinza Escuro */
-      --color-tintus-dim-gray: #696969; /* Cinza Médio */
-      --color-tintus-red: #B22222; /* Vermelho Tijolo */
-      --color-tintus-brown: #8B4513; /* Marrom Escuro */
+      --color-tintus-dark-gray: #4A4A4A;
+      /* Cinza Escuro */
+      --color-tintus-dim-gray: #696969;
+      /* Cinza Médio */
+      --color-tintus-red: #B22222;
+      /* Vermelho Tijolo */
+      --color-tintus-brown: #8B4513;
+      /* Marrom Escuro */
       /* Terra Theme Colors */
-      --color-terra-purple: #800080; /* Roxo Profundo */
-      --color-terra-medium-purple: #9370DB; /* Roxo Médio Suave */
-      --color-terra-light-gray: #D3D3D3; /* Cinza Claro */
-      --color-terra-beige: #F5F5DC; /* Bege Quente */
+      --color-terra-purple: #800080;
+      /* Roxo Profundo */
+      --color-terra-medium-purple: #9370DB;
+      /* Roxo Médio Suave */
+      --color-terra-light-gray: #D3D3D3;
+      /* Cinza Claro */
+      --color-terra-beige: #F5F5DC;
+      /* Bege Quente */
       /* Accent & Utility Colors */
-      --color-accent-white: #FFFFFF; /* Branco Puro */
-      --color-accent-gold: #FFD700; /* Dourado Vibrante para Destaques */
+      --color-accent-white: #FFFFFF;
+      /* Branco Puro */
+      --color-accent-gold: #FFD700;
+      /* Dourado Vibrante para Destaques */
       /* Typography */
       --font-heading: 'Montserrat', sans-serif;
       --font-subheading: 'Montserrat', sans-serif;
       --font-body: 'Montserrat', sans-serif;
       --font-quote: 'Playfair Display', serif;
     }
+
     /* Base Body Styles (Mobile First) */
-    html, body {
+    html,
+    body {
       font-family: var(--font-body);
       background: #0a0a0a;
       color: #f5f5f5;
@@ -52,6 +73,12 @@
       height: 100%;
       font-size: 16px;
     }
+
+    /* Impede a rolagem da página quando o modal estiver aberto */
+    body.modal-open {
+      overflow: hidden;
+    }
+
     /* Video Teaser Overlay - CORREÇÃO APLICADA */
     #teaser-overlay {
       position: fixed;
@@ -67,33 +94,42 @@
       opacity: 1;
       transition: opacity 1s ease, visibility 1s ease;
     }
+
     #teaser-overlay.hide {
       opacity: 0;
       visibility: hidden;
     }
+
     /* CORREÇÃO APLICADA - Problema do vídeo truncado no desktop */
     .teaser-container {
       width: 90%;
       max-width: 900px;
       position: relative;
-      max-height: 90vh; /* Limita a altura máxima a 90% da viewport */
-      overflow-y: hidden; 
-      padding: 20px; /* Adiciona espaço interno para melhor visualização */
-      box-sizing: border-box; /* Garante que o padding seja incluído no tamanho total */
+      max-height: 90vh;
+      /* Limita a altura máxima a 90% da viewport */
+      overflow-y: hidden;
+      padding: 20px;
+      /* Adiciona espaço interno para melhor visualização */
+      box-sizing: border-box;
+      /* Garante que o padding seja incluído no tamanho total */
       display: flex;
-      flex-direction: column; /* Organiza elementos em coluna */
+      flex-direction: column;
+      /* Organiza elementos em coluna */
     }
+
     /* CORREÇÃO APLICADA - Problema do vídeo truncado no desktop */
     #teaser-video {
       width: 100%;
-      max-height: 50vh; /* Reduzida para 50% para dar espaço aos controles */
+      max-height: 50vh;
+      /* Reduzida para 50% para dar espaço aos controles */
       border-radius: 12px;
       box-shadow: 0 0 30px rgba(218, 165, 32, 0.5);
       outline: 2px solid var(--color-treuss-gold);
       outline-offset: -2px;
       background: #000;
       display: block;
-      margin-bottom: 20px; /* Adiciona espaço abaixo do vídeo */
+      margin-bottom: 20px;
+      /* Adiciona espaço abaixo do vídeo */
     }
 
     /* CORREÇÃO APLICADA - Problema do vídeo truncado no desktop */
@@ -101,11 +137,15 @@
       display: flex;
       justify-content: center;
       gap: 20px;
-      margin-top: auto; /* Empurra os controles para a parte inferior */
+      margin-top: auto;
+      /* Empurra os controles para a parte inferior */
       padding-top: 10px;
-      flex-shrink: 0; /* Impede que os controles sejam comprimidos */
+      flex-shrink: 0;
+      /* Impede que os controles sejam comprimidos */
     }
-    .skip-button, .replay-button {
+
+    .skip-button,
+    .replay-button {
       background: rgba(218, 165, 32, 0.2);
       color: var(--color-treuss-gold);
       border: 2px solid var(--color-treuss-gold);
@@ -119,18 +159,23 @@
       transition: all 0.3s ease;
       font-size: 0.9rem;
     }
-    .skip-button:hover, .replay-button:hover {
+
+    .skip-button:hover,
+    .replay-button:hover {
       background: var(--color-treuss-gold);
       color: #000;
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
     }
+
     /* Estilos atualizados para os botões */
     .teaser-button {
       background: rgba(218, 165, 32, 0.1);
       color: var(--color-treuss-gold);
-      border: 1px solid var(--color-treuss-gold); /* Borda mais fina */
-      padding: 8px 15px; /* Tamanho reduzido */
+      border: 1px solid var(--color-treuss-gold);
+      /* Borda mais fina */
+      padding: 8px 15px;
+      /* Tamanho reduzido */
       border-radius: 50px;
       font-family: var(--font-heading);
       font-weight: 700;
@@ -138,14 +183,20 @@
       letter-spacing: 1px;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 0.8rem; /* Fonte menor */
-      opacity: 0.8; /* Mais transparente */
+      font-size: 0.8rem;
+      /* Fonte menor */
+      opacity: 0.8;
+      /* Mais transparente */
     }
+
     .teaser-button:hover {
       background: rgba(218, 165, 32, 0.2);
-      transform: translateY(-1px); /* Efeito mais sutil */
-      box-shadow: none; /* Removida a sombra */
+      transform: translateY(-1px);
+      /* Efeito mais sutil */
+      box-shadow: none;
+      /* Removida a sombra */
     }
+
     .teaser-title {
       text-align: center;
       margin-bottom: 20px;
@@ -156,6 +207,7 @@
       text-shadow: 0 0 10px rgba(218, 165, 32, 0.8);
       animation: glow 2s ease-in-out infinite alternate;
     }
+
     .teaser-subtitle {
       text-align: center;
       margin-bottom: 30px;
@@ -166,6 +218,7 @@
       line-height: 1.6;
       opacity: 0.9;
     }
+
     .teaser-close {
       position: absolute;
       top: 15px;
@@ -181,10 +234,12 @@
       transition: all 0.3s ease;
       z-index: 100;
     }
+
     .teaser-close:hover {
       background: var(--color-tintus-red);
       transform: rotate(90deg);
     }
+
     /* General Container */
     .container {
       max-width: 1200px;
@@ -192,6 +247,7 @@
       padding: 0 1rem;
       text-align: center;
     }
+
     /* Buttons */
     .btn {
       display: inline-block;
@@ -212,16 +268,19 @@
       text-decoration: none;
       margin-top: 1rem;
     }
+
     .btn:focus-visible {
-        outline: 3px solid var(--color-accent-white);
-        outline-offset: 3px;
+      outline: 3px solid var(--color-accent-white);
+      outline-offset: 3px;
     }
+
     .btn:hover {
-        background-color: var(--color-treuss-green);
-        color: var(--color-accent-white);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+      background-color: var(--color-treuss-green);
+      color: var(--color-accent-white);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
     }
+
     .cta-primary {
       background: linear-gradient(45deg, #ffd700, #ffed4e);
       color: #000;
@@ -241,11 +300,13 @@
       display: inline-block;
       text-decoration: none;
     }
+
     .cta-primary:hover {
       background: linear-gradient(45deg, #ffed4e, #ffd700);
       transform: scale(1.05);
       box-shadow: 0 8px 15px rgba(255, 215, 0, 0.5);
     }
+
     /* Fixed Space Background */
     .space-background {
       position: fixed;
@@ -270,11 +331,13 @@
       background-position: center;
       background-repeat: no-repeat;
     }
+
     /* Main Content Container */
     .content-container {
       position: relative;
       z-index: 10;
     }
+
     /* Header */
     header {
       height: 100vh;
@@ -290,6 +353,7 @@
         radial-gradient(circle 200px at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 60%),
         rgba(0, 0, 0, 0.3);
     }
+
     header h1 {
       font-size: clamp(2rem, 8vw, 3rem);
       margin-bottom: 0.8rem;
@@ -301,10 +365,17 @@
       background-clip: text;
       animation: glow 2s ease-in-out infinite alternate;
     }
+
     @keyframes glow {
-      0% { text-shadow: 0 0 10px gold; }
-      100% { text-shadow: 0 0 20px gold; }
+      0% {
+        text-shadow: 0 0 10px gold;
+      }
+
+      100% {
+        text-shadow: 0 0 20px gold;
+      }
     }
+
     header p {
       font-size: 1em;
       max-width: 90%;
@@ -313,6 +384,7 @@
       opacity: 0.9;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
     }
+
     /* Scroll Indicator */
     .scroll-indicator {
       position: fixed;
@@ -326,11 +398,26 @@
       opacity: 0.7;
       cursor: pointer;
     }
+
     @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-      40% { transform: translateX(-50%) translateY(-5px); }
-      60% { transform: translateX(-50%) translateY(-3px); }
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      40% {
+        transform: translateX(-50%) translateY(-5px);
+      }
+
+      60% {
+        transform: translateX(-50%) translateY(-3px);
+      }
     }
+
     /* Planet Sections */
     .planet-section {
       min-height: 80vh;
@@ -345,6 +432,7 @@
       background-attachment: scroll;
       text-align: center;
     }
+
     .planet-section::before {
       content: '';
       position: absolute;
@@ -355,25 +443,32 @@
       background: rgba(0, 0, 0, 0.6);
       z-index: -1;
     }
+
     /* Specific Planet Backgrounds */
     .planet-section.tintus {
       background-image: url('tintus.jpg');
     }
+
     .planet-section.tintus::before {
       background: rgba(139, 0, 0, 0.4);
     }
+
     .planet-section.terra {
       background-image: url('terra.jpg');
     }
+
     .planet-section.terra::before {
       background: rgba(0, 100, 139, 0.4);
     }
+
     .planet-section.treuss {
       background-image: url('treuss-3.jpg');
     }
+
     .planet-section.treuss::before {
       background: rgba(139, 107, 0, 0.4);
     }
+
     /* Planet Content Card */
     .planet-content {
       max-width: 95%;
@@ -392,12 +487,14 @@
       transform: translateY(0);
       position: relative;
     }
+
     .planet-content:hover {
       transform: none;
       box-shadow:
         0 10px 20px rgba(0, 0, 0, 0.7),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
+
     .planet-content h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
@@ -405,55 +502,66 @@
       letter-spacing: 2px;
       font-weight: 700;
     }
+
     .planet-content p {
       font-size: 0.95rem;
       line-height: 1.6;
       opacity: 0.95;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     }
+
     /* Specific Planet Content Card Colors */
     .planet-content.tintus {
       border-color: rgba(255, 80, 80, 0.6);
       background: rgba(25, 10, 10, 0.5);
     }
+
     .planet-content.tintus h2 {
       color: #ff5050;
       text-shadow: 0 0 15px rgba(255, 80, 80, 0.8);
     }
+
     .planet-content.tintus:hover {
       border-color: rgba(255, 80, 80, 0.9);
       box-shadow:
         0 20px 40px rgba(255, 80, 80, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
+
     .planet-content.terra {
       border-color: rgba(30, 144, 255, 0.6);
       background: rgba(10, 15, 25, 0.5);
     }
+
     .planet-content.terra h2 {
       color: #1e90ff;
       text-shadow: 0 0 15px rgba(30, 144, 255, 0.8);
     }
+
     .planet-content.terra:hover {
       border-color: rgba(30, 144, 255, 0.9);
       box-shadow:
         0 20px 40px rgba(30, 144, 255, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
+
     .planet-content.treuss {
       border-color: rgba(255, 215, 0, 0.6);
       background: rgba(25, 20, 10, 0.5);
     }
+
     .planet-content.treuss h2 {
       color: #ffd700;
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
     }
+
     .planet-content.treuss:hover {
       border-color: rgba(255, 215, 0, 0.9);
       box-shadow:
         0 20px 40px rgba(255, 215, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
+
     /* Reflection Section */
     .reflection-section {
       text-align: center !important;
@@ -463,6 +571,7 @@
       position: relative;
       z-index: 15;
     }
+
     .section-title {
       font-size: 2em;
       margin-bottom: 2rem;
@@ -470,6 +579,7 @@
       color: #ffd700;
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
+
     .highlight-quote {
       text-align: center;
       font-family: var(--font-quote);
@@ -483,12 +593,185 @@
       line-height: 1.4;
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
     }
+
     .reflection-section p {
       max-width: 90%;
       margin: 0 auto;
       font-size: 1em;
       line-height: 1.6;
     }
+
+    /* ====== Offer HUB (mobile-first) ====== */
+    .offer-hub {
+      padding: 3rem var(--pad);
+      background: linear-gradient(135deg, #1a1a2e 0%, rgba(218, 165, 32, .08) 100%);
+    }
+
+    .offer-title {
+      text-align: center;
+      color: var(--gold);
+      font-size: clamp(22px, 3vw, 32px);
+      margin-bottom: .25rem;
+    }
+
+    .offer-lead {
+      text-align: center;
+      max-width: 48rem;
+      margin: 0 auto 1.5rem;
+      color: var(--muted);
+    }
+
+    .offer-grid {
+      display: grid;
+      gap: 1.25rem;
+      align-items: start;
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    .offer-cover img {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .offer-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .75rem;
+      margin-bottom: 1rem;
+    }
+
+    .offer-card {
+      text-align: left;
+      background: rgba(0, 0, 0, .5);
+      border: 1px solid var(--gold-20);
+      border-radius: 14px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: .25s;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 215, 0, .5);
+    }
+
+    .offer-card h3 {
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin: 0 0 .25rem;
+    }
+
+    .offer-card p {
+      color: var(--muted);
+      margin: .2rem 0 .5rem;
+    }
+
+    .offer-card .card-cta {
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    .tabs {
+      display: flex;
+      gap: .5rem;
+      margin: .5rem 0 1rem;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .tab {
+      appearance: none;
+      background: transparent;
+      color: #fff;
+      border: none;
+      padding: .6rem .9rem;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .tab.is-active {
+      background: rgba(0, 0, 0, .5);
+      color: var(--gold);
+      border: 1px solid var(--gold-20);
+      border-bottom-color: transparent;
+    }
+
+    .tab-panels {
+      background: rgba(0, 0, 0, .45);
+      border: 1px solid var(--gold-20);
+      border-radius: 0 12px 12px 12px;
+      padding: 1rem;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.is-active {
+      display: block;
+    }
+
+    .purchase-form,
+    .download-form {
+      display: grid;
+      gap: .9rem;
+    }
+
+    .form-title {
+      text-align: center;
+      margin: 0 0 .25rem;
+      font-weight: 700;
+    }
+
+    .form-row {
+      display: grid;
+      gap: .35rem;
+    }
+
+    label {
+      font-size: .95rem
+    }
+
+    .form-row input {
+      background: rgba(0, 0, 0, .4);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 8px;
+      padding: .7rem .8rem;
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: .92rem;
+      margin-top: .25rem;
+    }
+
+    .form-message {
+      margin-top: .6rem;
+      padding: .65rem .8rem;
+      border-radius: 8px;
+    }
+
+    .form-message.success {
+      background: #2f7d57;
+      color: #fff;
+    }
+
+    .form-message.error {
+      background: #8c2b2b;
+      color: #fff;
+    }
+
+
+
     /* Offer Section */
     .offer-section {
       padding: 4rem 1rem;
@@ -496,6 +779,7 @@
       position: relative;
       z-index: 15;
     }
+
     .offer-section .subtitle {
       font-size: 1.1rem;
       color: #555;
@@ -503,6 +787,7 @@
       max-width: 640px;
       margin: 0 auto 2.5rem;
     }
+
     .cards-container {
       display: flex;
       flex-direction: column;
@@ -512,6 +797,7 @@
       justify-content: center;
       align-items: center;
     }
+
     .card {
       background: rgba(26, 26, 26, 0.95);
       padding: 2rem;
@@ -524,23 +810,27 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
       transition: all 0.3s ease;
     }
+
     .card:hover {
       transform: none;
       border-color: rgba(255, 215, 0, 0.6);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
     }
+
     .card h3 {
       font-size: 1.5rem;
       margin-bottom: 1rem;
       color: #ffd700;
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
     }
+
     .card p {
       margin-bottom: 1.5rem;
       line-height: 1.5;
       opacity: 0.9;
       font-size: 0.95em;
     }
+
     /* Author Section */
     .author-section {
       padding: 4rem 1.5rem;
@@ -548,17 +838,20 @@
       color: #f5f5f5;
       text-align: center;
     }
+
     .author-section h2 {
       font-size: 2em;
       color: #ffd700;
       margin-bottom: 1.5rem;
     }
+
     .author-section p {
       max-width: 90%;
       margin: 0 auto;
       font-size: 1em;
       line-height: 1.7;
     }
+
     /* Download Section */
     #download {
       scroll-margin-top: 80px;
@@ -573,211 +866,343 @@
       position: relative;
       z-index: 15;
     }
+
     #download .container {
       max-width: 600px;
     }
+
     #download h2 {
       font-size: 2em;
       margin-bottom: 1.5rem;
       color: var(--color-accent-gold);
     }
+
     #download p {
       font-size: 1.1em;
       margin-bottom: 2rem;
     }
+
     /* Purchase Section */
     #compra {
-        scroll-margin-top: 80px;
-        background: linear-gradient(to bottom, var(--color-terra-medium-purple), var(--color-tintus-dim-gray));
-        color: var(--color-accent-white);
-        padding: 50px 1rem;
-        position: relative;
-        z-index: 15;
+      scroll-margin-top: 80px;
+      background: linear-gradient(to bottom, var(--color-terra-medium-purple), var(--color-tintus-dim-gray));
+      color: var(--color-accent-white);
+      padding: 50px 1rem;
+      position: relative;
+      z-index: 15;
     }
+
     #compra h2 {
       font-size: 1.8em;
       margin-bottom: 2rem;
     }
+
     .compra-content {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        justify-content: center;
-        align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
     }
+
     .book-cover {
-        width: 100%;
-        max-width: 250px;
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
-        border-radius: 8px;
-        overflow: hidden;
+      width: 100%;
+      max-width: 250px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      overflow: hidden;
     }
+
     .book-cover img {
-        width: 100%;
-        height: auto;
-        display: block;
+      width: 100%;
+      height: auto;
+      display: block;
     }
+
     .purchase-form {
-        width: 100%;
-        max-width: 450px;
-        background-color: rgba(0, 0, 0, 0.8);
-        border-radius: 10px;
-        padding: 25px;
-        text-align: left;
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 450px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      padding: 25px;
+      text-align: left;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .purchase-form h3 {
-        margin-bottom: 1em;
-        text-align: center;
-        color: var(--color-accent-white);
-        font-family: var(--font-heading);
-        font-size: 1.3em;
+      margin-bottom: 1em;
+      text-align: center;
+      color: var(--color-accent-white);
+      font-family: var(--font-heading);
+      font-size: 1.3em;
     }
+
+    /* =================================================================== */
+    /* NOVOS ESTILOS PARA O MODAL DE PRIVACIDADE */
+    /* =================================================================== */
+    .privacy-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .privacy-modal-overlay.is-active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .privacy-modal-content {
+      position: relative;
+      background: #1a1a2e;
+      color: var(--muted);
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+
+    .privacy-modal-overlay.is-active .privacy-modal-content {
+      transform: scale(1);
+    }
+
+    .privacy-modal-content h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      color: var(--color-accent-gold);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .privacy-modal-content h4 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--color-treuss-gold);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .privacy-modal-content p,
+    .privacy-modal-content li {
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .privacy-modal-content ul {
+      padding-left: 20px;
+    }
+
+    .privacy-modal-content a {
+      color: var(--color-accent-gold);
+    }
+
+    .privacy-modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .form-group-terms a {
+      color: var(--color-treuss-gold);
+      text-decoration: underline;
+      cursor: pointer;
+      /* Adiciona o cursor de ponteiro para indicar que é clicável */
+    }
+
+    footer a[data-trigger-modal] {
+      cursor: pointer;
+    }
+
     .form-group {
-        margin-bottom: 15px;
+      margin-bottom: 15px;
     }
+
     .form-group label {
-        display: block;
-        margin-bottom: 6px;
-        font-family: var(--font-subheading);
-        color: var(--color-terra-light-gray);
-        font-size: 0.9em;
+      display: block;
+      margin-bottom: 6px;
+      font-family: var(--font-subheading);
+      color: var(--color-terra-light-gray);
+      font-size: 0.9em;
     }
+
     .form-group input[type="text"],
     .form-group input[type="email"],
     .form-group input[type="number"],
     .form-group input[type="tel"] {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background-color: rgba(0, 0, 0, 0.4);
-        color: var(--color-accent-white);
-        border-radius: 5px;
-        font-size: 0.9em;
-        transition: border-color 0.3s ease, background-color 0.3s ease;
-        outline: none;
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(0, 0, 0, 0.4);
+      color: var(--color-accent-white);
+      border-radius: 5px;
+      font-size: 0.9em;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+      outline: none;
     }
+
     .form-group input:focus {
-        border-color: var(--color-treuss-gold);
-        background-color: rgba(0, 0, 0, 0.6);
+      border-color: var(--color-treuss-gold);
+      background-color: rgba(0, 0, 0, 0.6);
     }
+
     .form-group input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.6);
     }
-    .pix-info {
-        background-color: rgba(60, 179, 113, 0.1);
-        border: 1px solid var(--color-treuss-green);
-        border-radius: 5px;
-        padding: 15px;
-        margin-top: 20px;
-        text-align: center;
-        color: var(--color-accent-white);
-        font-family: var(--font-body);
+
+    .form-group-terms {
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
     }
-    .pix-info p {
-        margin-bottom: 8px;
-        font-size: 0.9em;
+
+    .form-group-terms label {
+      cursor: pointer;
     }
-    .pix-info strong {
-        color: var(--color-treuss-gold);
-        font-size: 1em;
+
+    .form-group-terms input {
+      margin-right: 8px;
+      vertical-align: middle;
     }
-    .form-message {
-        margin-top: 15px;
-        padding: 10px;
-        border-radius: 5px;
-        font-weight: 700;
-        text-align: center;
-        font-size: 0.9em;
-    }
-    .form-message.error {
-        background-color: var(--color-tintus-red);
-        color: var(--color-accent-white);
-    }
-    .form-message.success {
-        background-color: var(--color-treuss-green);
-        color: var(--color-accent-white);
-    }
+
     /* Footer */
     footer {
-        background-color: var(--color-tintus-dark-gray);
-        color: var(--color-terra-light-gray);
-        text-align: center;
-        padding: 30px 1rem;
-        font-size: 0.8em;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
-        z-index: 15;
+      background-color: var(--color-tintus-dark-gray);
+      color: var(--color-terra-light-gray);
+      text-align: center;
+      padding: 30px 1rem;
+      font-size: 0.8em;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 15;
     }
+
     footer .container {
-        max-width: 1200px;
-        margin: 0 auto;
+      max-width: 1200px;
+      margin: 0 auto;
     }
+
     .social-links {
-        margin-top: 15px;
-        margin-bottom: 20px;
+      margin-top: 15px;
+      margin-bottom: 20px;
     }
+
     .social-links a {
-        display: inline-block;
-        margin: 0 10px;
-        font-size: 1.5em;
-        color: var(--color-terra-light-gray);
-        transition: color 0.3s ease, transform 0.3s ease;
-        text-decoration: none;
+      display: inline-block;
+      margin: 0 10px;
+      font-size: 1.5em;
+      color: var(--color-terra-light-gray);
+      transition: color 0.3s ease, transform 0.3s ease;
+      text-decoration: none;
     }
+
     .social-links a:hover {
-        color: var(--color-treuss-gold);
-        transform: scale(1.1);
+      color: var(--color-treuss-gold);
+      transform: scale(1.1);
     }
+
     .social-links i {
-        width: 1em;
-        text-align: center;
+      width: 1em;
+      text-align: center;
     }
+
     footer a {
-        color: var(--color-treuss-gold);
-        text-decoration: none;
-        transition: color 0.3s ease;
+      color: var(--color-treuss-gold);
+      text-decoration: none;
+      transition: color 0.3s ease;
     }
+
     footer a:hover {
-        color: var(--color-accent-white);
+      color: var(--color-accent-white);
     }
+
     footer p {
-        margin-bottom: 8px;
-        line-height: 1.5;
+      margin-bottom: 8px;
+      line-height: 1.5;
     }
+
     /* Tablet and Desktop Styles */
+    @media (min-width: 960px) {
+      .offer-grid {
+        grid-template-columns: 360px 1fr;
+      }
+
+      .offer-cover {
+        position: sticky;
+        top: 96px;
+        align-self: start;
+      }
+
+      .offer-cover img {
+        max-width: 340px;
+      }
+
+      .offer-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (min-width: 768px) {
       body {
         font-size: 17px;
       }
+
       .container {
         padding: 0 20px;
       }
+
       .btn {
         padding: 15px 30px;
         font-size: 1.1em;
         letter-spacing: 1px;
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
       }
+
       .cta-primary {
         padding: 1.2rem 3rem;
       }
+
       .cta-primary:hover {
         transform: scale(1.08);
         box-shadow: 0 15px 30px rgba(255, 215, 0, 0.5);
       }
+
       header {
         padding: 0 2rem;
         background: radial-gradient(circle 400px at 50% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 60%), rgba(0, 0, 0, 0.3);
       }
+
       header h1 {
         font-size: clamp(2.5rem, 5vw, 4rem);
         margin-bottom: 1rem;
         letter-spacing: 2px;
         filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
       }
+
       header p {
         font-size: 1.2rem;
         max-width: 600px;
@@ -785,27 +1210,33 @@
         line-height: 1.6;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
       }
+
       .scroll-indicator {
         bottom: 30px;
         font-size: 2rem;
       }
+
       .planet-section {
         min-height: 100vh;
         padding: 4rem 2rem;
         background-attachment: fixed;
       }
+
       .planet-section.tintus {
         justify-content: flex-end;
         padding-right: 10%;
       }
+
       .planet-section.terra {
         justify-content: flex-start;
         padding-left: 10%;
       }
+
       .planet-section.treuss {
         justify-content: flex-end;
         padding-right: 10%;
       }
+
       .planet-content {
         max-width: 500px;
         padding: 3rem;
@@ -816,44 +1247,53 @@
           0 20px 40px rgba(0, 0, 0, 0.7),
           inset 0 1px 0 rgba(255, 255, 255, 0.1);
       }
+
       .planet-content:hover {
         transform: translateY(-15px) scale(1.05);
         box-shadow:
           0 40px 80px rgba(0, 0, 0, 0.8),
           inset 0 1px 0 rgba(255, 255, 255, 0.2);
       }
+
       .planet-content h2 {
         font-size: 3rem;
         margin-bottom: 1.5rem;
         letter-spacing: 3px;
       }
+
       .planet-content p {
         font-size: 1.1rem;
         line-height: 1.8;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
       }
+
       .reflection-section {
         padding: 8rem 2rem;
       }
+
       .section-title {
         font-size: 2.5rem;
         margin-bottom: 3rem;
         text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
       }
+
       .highlight-quote {
         font-size: 2rem;
         margin: 3rem 0;
         max-width: 800px;
         text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
       }
+
       .reflection-section p {
         font-size: 1.2rem;
         line-height: 1.8;
       }
+
       .cards-container {
         flex-direction: row;
         gap: 3rem;
       }
+
       .card {
         padding: 3rem;
         border-radius: 20px;
@@ -861,49 +1301,60 @@
         max-width: 400px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       }
+
       .card:hover {
         transform: translateY(-15px);
         border-color: rgba(255, 215, 0, 0.6);
         box-shadow: 0 30px 60px rgba(255, 215, 0, 0.2);
       }
+
       .card h3 {
         font-size: 1.8rem;
         margin-bottom: 1.5rem;
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
       }
+
       .card p {
         margin-bottom: 2rem;
         line-height: 1.6;
         font-size: 1.1rem;
       }
+
       .author-section {
         padding: 8rem 2rem;
       }
+
       .author-section h2 {
         font-size: 2.5rem;
         margin-bottom: 2rem;
       }
+
       .author-section p {
         font-size: 1.2rem;
         line-height: 1.8;
-      }      
+      }
+
       #compra {
         padding: 80px 5%;
       }
+
       #compra h2 {
         font-size: 2em;
         margin-bottom: 3em;
       }
+
       .compra-content {
         flex-direction: row;
         gap: 50px;
       }
+
       .book-cover {
         flex: 1 1 300px;
         max-width: 350px;
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         border-radius: 10px;
       }
+
       .purchase-form {
         flex: 2 1 450px;
         padding: 40px;
@@ -912,17 +1363,21 @@
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.15);
       }
+
       .purchase-form h3 {
         margin-bottom: 1.5em;
         font-size: 1.5em;
       }
+
       .form-group {
         margin-bottom: 20px;
       }
+
       .form-group label {
         margin-bottom: 8px;
         font-size: 0.95em;
       }
+
       .form-group input[type="text"],
       .form-group input[type="email"],
       .form-group input[type="number"],
@@ -931,78 +1386,99 @@
         border-radius: 8px;
         font-size: 1em;
       }
+
       .pix-info {
         padding: 20px;
         margin-top: 30px;
       }
+
       .pix-info p {
         margin-bottom: 10px;
         font-size: 1em;
       }
+
       .pix-info strong {
         font-size: 1.1em;
       }
+
       .form-message {
         margin-top: 20px;
         padding: 15px;
         border-radius: 8px;
         font-size: 1em;
       }
+
       footer {
         padding: 40px 5%;
         font-size: 0.9em;
       }
+
       .social-links {
         margin-top: 20px;
         margin-bottom: 30px;
       }
+
       .social-links a {
         margin: 0 15px;
         font-size: 1.8em;
       }
+
       .social-links a:hover {
         transform: scale(1.2);
       }
+
       footer p {
         margin-bottom: 10px;
         line-height: 1.6;
       }
+
       /* Teaser adjustments for desktop */
       .teaser-title {
         font-size: clamp(2.5rem, 4vw, 3.5rem);
       }
+
       .teaser-subtitle {
         font-size: 1.3rem;
         max-width: 70%;
       }
     }
+
     @media (max-width: 480px) {
       .cta-primary {
         font-size: 0.9rem;
         padding: 0.9rem 1.2rem;
       }
     }
+
     /* Accessibility (Reduced Motion) */
     @media (prefers-reduced-motion: reduce) {
       .space-background {
         background-attachment: scroll;
         animation: none;
       }
+
       .scroll-indicator {
         animation: none;
       }
+
       header h1 {
         animation: none;
       }
+
       .planet-section {
         background-attachment: scroll;
       }
-      .planet-content, .card, .book-cover, .purchase-form {
+
+      .planet-content,
+      .card,
+      .book-cover,
+      .purchase-form {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
       }
     }
+
     /* Correções de acessibilidade */
     .sr-only {
       position: absolute;
@@ -1014,15 +1490,148 @@
       clip: rect(0, 0, 0, 0);
       border: 0;
     }
+
+    /* ==== Harmonizar offer-hub e destacar CTAs ==== */
+
+    /* 1) Ponte de variáveis usadas na offer-hub */
+    :root {
+      --container: 1100px;
+      --pad: clamp(16px, 2.5vw, 28px);
+      --shadow: 0 10px 25px rgba(0, 0, 0, .5);
+      --stroke: rgba(255, 255, 255, .12);
+      --gold: var(--color-accent-gold, #FFD700);
+      --gold-20: rgba(255, 215, 0, .20);
+      --muted: rgba(255, 255, 255, .85);
+    }
+
+    /* 2) Ajustes finos do bloco offer-hub (mantendo seu tema) */
+    .offer-hub {
+      padding: 3rem var(--pad);
+      background: linear-gradient(135deg, #1a1a2e 0%, rgba(218, 165, 32, .08) 100%);
+    }
+
+    .offer-title,
+    .offer-hub .section-title {
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255, 215, 0, .25);
+    }
+
+    .offer-lead {
+      color: var(--muted);
+    }
+
+    /* 3) Transformar o .card-cta em botão com o mesmo “feeling” de .cta-primary */
+    .offer-card .card-cta {
+      display: inline-block;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      padding: .7rem 1.1rem;
+      border-radius: 999px;
+      background: linear-gradient(45deg, var(--gold), #ffed4e);
+      color: #000;
+      border: none;
+      box-shadow: 0 6px 14px rgba(255, 215, 0, .28);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .offer-card .card-cta:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 10px 20px rgba(255, 215, 0, .35);
+      filter: saturate(1.05);
+    }
+
+    .offer-card .card-cta:focus,
+    .offer-card .card-cta:focus-visible {
+      outline: 3px solid var(--color-accent-white);
+      outline-offset: 3px;
+    }
+
+    /* 4) Card host com leve realce no hover */
+    .offer-card {
+      background: rgba(0, 0, 0, .5);
+      border: 1px solid var(--gold-20);
+      border-radius: 14px;
+      transition: .25s;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 215, 0, .5);
+    }
+
+    /* 5) Inputs e botões dentro dos painéis seguem seu tema já existente */
+    .purchase-form .btn-full,
+    .download-form .btn-full {
+      background: linear-gradient(45deg, var(--gold), #ffed4e);
+      color: #000;
+      border: none;
+      border-radius: 999px;
+      font-weight: 700;
+      padding: .9rem 1.2rem;
+      box-shadow: 0 6px 14px rgba(255, 215, 0, .28);
+    }
+
+    .purchase-form .btn-full:hover,
+    .download-form .btn-full:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(255, 215, 0, .35);
+    }
+
+    /** Bloco para o checkbox de consentimento da LGPD **/
+    .form-group-terms {
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .form-group-terms label {
+      cursor: pointer;
+    }
+
+    .form-group-terms input {
+      margin-right: 8px;
+      vertical-align: middle;
+      appearance: none;
+      background-color: transparent;
+      border: 1px solid var(--gold);
+      width: 1em;
+      height: 1em;
+      border-radius: 3px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .form-group-terms input:checked {
+      background-color: var(--gold);
+    }
+
+    .form-group-terms input:checked::after {
+      content: '✓';
+      color: #000;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+
+    .form-group-terms a {
+      color: var(--color-treuss-gold);
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <body>
-  <!-- Teaser Video Overlay -->
   <div id="teaser-overlay">
     <div class="teaser-container">
       <button class="teaser-close" aria-label="Fechar vídeo">×</button>
-      
-      <p class="teaser-subtitle">Uma jornada cósmica através de três planetas, onde cada escolha molda o destino de civilizações</p>
+
+      <p class="teaser-subtitle">Uma jornada cósmica através de três planetas, onde cada escolha molda o destino de
+        civilizações</p>
       <video id="teaser-video" autoplay muted playsinline>
         <source src="teaser_treuss.mp4" type="video/mp4">
         Seu navegador não suporta vídeos HTML5.
@@ -1037,327 +1646,676 @@
   <div class="content-container">
     <header>
       <h1>Treuss – A Energia Precede a Matéria</h1>
-      <p>Uma ficção distópica iniciática sobre ética, consciência e transformação planetária. Um chamado à luz em tempos de colapso.</p>
-      <button onclick="document.getElementById('offer').scrollIntoView({ behavior: 'smooth' })" class="btn">Quero meu exemplar</button>
+      <p>Uma ficção distópica iniciática sobre ética, consciência e transformação planetária. Um chamado à luz em tempos
+        de colapso.</p>
+      <button onclick="document.getElementById('offer').scrollIntoView({ behavior: 'smooth' })" class="btn">Quero meu
+        exemplar</button>
       <div class="scroll-indicator">↓</div>
     </header>
-    <section class="planet-section tintus">
-      <div class="planet-content tintus">
-        <h2>Tintus</h2>
-        <p>Um mundo consumido pela ganância, pela hiperprodução e pelo controle. Um espelho do que evitamos ver. Neste planeta cinza da destruição, a ambição desmedida corrompeu toda forma de vida, criando um ciclo infinito de consumo e devastação.</p>
-      </div>
-    </section>
-    <section class="planet-section terra">
-      <div class="planet-content terra">
-        <h2>Terra</h2>
-        <p>O campo de batalha. Um planeta à beira do colapso, mas ainda repleto de sementes de despertar. Decidimos nosso destino coletivo através de cada escolha individual.</p>
-      </div>
-    </section>
-    <section class="planet-section treuss">
-      <div class="planet-content treuss">
-        <h2>Treuss</h2>
-        <p>Tecnologia limpa, harmonia energética e sabedoria ancestral. É a vibração originária, o futuro possível. Este planeta lilás representa a síntese entre progresso e consciência, onde a tecnologia serve à vida.</p>
-      </div>
-    </section>
-    <section class="reflection-section">
-      <h2 class="section-title">Uma reflexão urgente</h2>
-      <div class="highlight-quote">
-        "Se despertarmos nosso potencial treussiano, lidaremos com a mais poderosa força do universo: a consciência coletiva."
-      </div>
-      <p style="max-width:700px; margin:0 auto; font-size:1.2rem; line-height:1.8;">
-        A Terra é o ponto de virada. O que escolhemos vibrar determina o mundo que cocriamos. A ética precede qualquer transformação.
-      </p>
-    </section>
-    <section class="offer-section" id="offer">
-      <div class="container">
-        <p class="highlight-quote" style="max-width:600px; margin:1rem auto 2rem;">
-          Escolha como mergulhar nesta jornada: baixe o eBook grátis agora mesmo ou receba sua edição impressa em casa.  
-          Se desejar, contribua com o valor que fizer sentido para você — cada gesto mantém viva a ética por trás deste projeto.
+    <main>
+      <section class="planet-section tintus">
+        <div class="planet-content tintus">
+          <h2>Tintus</h2>
+          <p>Um mundo consumido pela ganância, pela hiperprodução e pelo controle. Um espelho do que evitamos ver.
+            Neste
+            planeta cinza da destruição, a ambição desmedida corrompeu toda forma de vida, criando um ciclo infinito de
+            consumo e devastação.</p>
+        </div>
+      </section>
+      <section class="planet-section terra">
+        <div class="planet-content terra">
+          <h2>Terra</h2>
+          <p>O campo de batalha. Um planeta à beira do colapso, mas ainda repleto de sementes de despertar. Decidimos
+            nosso destino coletivo através de cada escolha individual.</p>
+        </div>
+      </section>
+      <section class="planet-section treuss">
+        <div class="planet-content treuss">
+          <h2>Treuss</h2>
+          <p>Tecnologia limpa, harmonia energética e sabedoria ancestral. É a vibração originária, o futuro possível.
+            Este
+            planeta lilás representa a síntese entre progresso e consciência, onde a tecnologia serve à vida.</p>
+        </div>
+      </section>
+      <section class="reflection-section">
+        <h2 class="section-title">Uma reflexão urgente</h2>
+        <div class="highlight-quote">
+          "Se despertarmos nosso potencial treussiano, lidaremos com a mais poderosa força do universo: a consciência
+          coletiva."
+        </div>
+        <p style="max-width:700px; margin:0 auto; font-size:1.2rem; line-height:1.8;">
+          A Terra é o ponto de virada. O que escolhemos vibrar determina o mundo que cocriamos. A ética precede qualquer
+          transformação.
         </p>
-        <div class="cards-container">
-          <div class="card">
-            <h3>Livro Impresso</h3>
-            <p>Envio direto da autora. Pagamento via PIX.</p>
-            <button onclick="document.getElementById('compra').scrollIntoView({ behavior: 'smooth' })" class="cta-primary">Comprar</button>
-          </div>
-          <div class="card">
-            <h3>eBook gratuito</h3>
-            <p>PDF ou link Kindle, na hora. Apoie com uma contribuição voluntária, se quiser.</p>
-            <button onclick="document.getElementById('download').scrollIntoView({ behavior: 'smooth' })" class="cta-primary">Baixar e Contribuir</button>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="author-section">
-      <h2>Sobre a autora</h2>
-      <p>
-        Anna Frota transita com ousadia entre a ficção científica e a filosofia energética. Curiosa por essência e criativa por natureza, ela escreve para despertar — palavras que não apenas contam uma história, mas provocam uma jornada interior. Treuss é mais do que um livro: é o reflexo de uma mente que enxerga o invisível e o traduz em verbo.
-      </p>
-    </section>
-    <!-- Seção de download do eBook -->
-    <section id="download">
-      <div class="container">
-        <h2>Download do eBook</h2>
-        <p>Preencha o formulário abaixo para receber o link de download do eBook. Contribua com o valor que desejar (opcional).</p>
-        <!-- Formulário de download seria adicionado aqui -->
-        <p style="margin-top: 2rem;"><em>Disponível em breve.</em></p>
-      </div>
-    </section>
-    <section id="compra">
+      </section>
+
+      <!-- 
+      GOOGLE APP SCRIPT
+      Versão 1 em 13 de ago. de 2025, 09:55
+      Código de implantação
+       AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A
+
+       App da Web - APPS_URL = 
+      https://script.google.com/macros/s/AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A/exec
+
+      -->
+
+      <!-- Endpoint de submissão silenciosa (anti-CORS) -->
+      <iframe name="gsheet_iframe" style="display:none" aria-hidden="true"></iframe>
+
+      <!-- =======================================================
+     OFFER-HUB  (Mini-hub com abas: Compra / Download)
+     - Mantém layout original, sem fetch()
+     - Submissão direta ao Google Apps Script via <form target="gsheet_iframe">
+     - Requer um único <iframe name="gsheet_iframe"> em algum lugar do documento
+       (ex.: antes desta section). 
+     ======================================================= -->
+      <section class="offer-hub" id="offer" aria-labelledby="offer-title">
         <div class="container">
-            <h2>Comprar Livro Impresso</h2>
-            <div class="compra-content">
-                <div class="book-cover">
-                    <picture>
-                        <source srcset="treuss_capa_livro.webp" type="image/webp">
-                        <img src="treuss_capa_livro.jpg" alt="Capa do Livro Treuss" loading="lazy">
-                    </picture>
-                </div>
-                <div class="purchase-form">
-                    <h3>DETALHES DA COMPRA VIA PIX</h3>
-                    <form id="purchaseForm">
-                        <div class="form-group">
-                            <label for="name">Nome Completo: <span aria-hidden="true">*</span><span class="sr-only">obrigatório</span></label>
-                            <input type="text" id="name" name="name" placeholder="Seu nome completo" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">E-mail: <span aria-hidden="true">*</span><span class="sr-only">obrigatório</span></label>
-                            <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Telefone (WhatsApp, opcional):</label>
-                            <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX ou (XX) XXXX-XXXX" pattern="[0-9]{2} [0-9]{5}-[0-9]{4}|[0-9]{2} [0-9]{4}-[0-9]{4}">
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">Quantidade de Livros: <span aria-hidden="true">*</span><span class="sr-only">obrigatório</span></label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" required aria-required="true">
-                        </div>
-                        <button type="submit" class="btn" style="width: 100%;">FINALIZAR COMPRA & RECEBER DETALHES PIX</button>
-                        <div id="formMessage" class="form-message" style="display:none;" role="alert"></div>
-                        <div class="pix-info">
-                            <p>Após clicar em "Finalizar Compra", seu cliente de e-mail será aberto com os dados do pedido. Por favor, envie o e-mail para receber as instruções detalhadas do PIX e finalizar o pagamento.</p>
-                            <p>Valor por exemplar: <strong>R$ 56,00</strong></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+          <h2 id="offer-title" class="section-title">Escolha como mergulhar nesta jornada: </h2>
+          <p class="offer-lead">
+            Baixe o eBook grátis agora mesmo ou receba sua edição impressa em casa.<br>
+            Se desejar, contribua com o valor que fizer sentido para você — cada gesto mantém viva a ética por trás
+            deste projeto.
+          </p>
+
+          <div class="offer-grid" role="region" aria-label="Opções do livro">
+            <!-- Capa (coluna fixa no desktop) -->
+            <aside class="offer-cover" aria-label="Capa do livro">
+              <figure>
+                <picture>
+                  <source srcset="treuss_capa_livro.webp" type="image/webp" />
+                  <img src="treuss_capa_livro.jpg" alt="Capa do livro Treuss - A Energia Precede a Matéria"
+                    loading="lazy" />
+                </picture>
+                <figcaption class="sr-only">Capa do livro Treuss - A Energia Precede a Matéria</figcaption>
+              </figure>
+            </aside>
+
+            <div class="offer-interactive">
+              <!-- Cards chamam as abas (atalhos visuais, aria-hidden) -->
+              <div class="offer-cards" aria-hidden="true">
+                <button class="offer-card" data-tab-target="compra" aria-describedby="card-compra-desc">
+                  <h3>Livro Impresso</h3>
+                  <p id="card-compra-desc">Envio direto da autora. Pagamento por PIX.</p>
+                  <span class="card-cta">Comprar</span>
+                </button>
+                <button class="offer-card" data-tab-target="download" aria-describedby="card-download-desc">
+                  <h3>eBook gratuito</h3>
+                  <p id="card-download-desc">Enviamos o PDF por e-mail. Opcional: contribua com qualquer valor.</p>
+                  <span class="card-cta">Baixar e contribuir</span>
+                </button>
+              </div>
+
+              <!-- Abas acessíveis -->
+              <div class="tabs" role="tablist" aria-label="Formulários">
+                <button role="tab" id="tab-compra" class="tab is-active" aria-selected="true"
+                  aria-controls="panel-compra" data-tab="compra">
+                  Comprar impresso
+                </button>
+                <button role="tab" id="tab-download" class="tab" aria-selected="false" aria-controls="panel-download"
+                  data-tab="download">
+                  Baixar eBook
+                </button>
+              </div>
+
+              <div class="tab-panels">
+                <!-- Painel: COMPRA -->
+                <section id="panel-compra" role="tabpanel" aria-labelledby="tab-compra" class="tab-panel is-active">
+                  <!--
+              Anti-CORS: envio direto ao Apps Script (exec), sem JS de rede.
+              IMPORTANTE: não usar 'novalidate' aqui, para aproveitar a validação nativa.
+            -->
+                  <form id="purchaseForm" class="purchase-form"
+                    action="https://script.google.com/macros/s/AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A/exec"
+                    method="POST" target="gsheet_iframe">
+                    <!-- Identifica o tipo no GAS -->
+                    <input type="hidden" name="type" value="purchase">
+                    <!-- Honeypot anti-bot (CSS .sr-only deve ocultar visualmente) -->
+                    <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
+                      aria-hidden="true">
+
+                    <h3 class="form-title">Detalhes da compra via PIX</h3>
+
+                    <div class="form-row">
+                      <label for="name">Nome completo<span aria-hidden="true">*</span></label>
+                      <input type="text" id="name" name="name" required placeholder="Seu nome" />
+                    </div>
+
+                    <div class="form-row">
+                      <label for="email">E-mail<span aria-hidden="true">*</span></label>
+                      <input type="email" id="email" name="email" required placeholder="seu@email.com" />
+                    </div>
+
+                    <div class="form-row">
+                      <label for="phone">Telefone (WhatsApp, opcional)</label>
+                      <input type="tel" id="phone" name="phone" placeholder="(11) 98888-7777" />
+                    </div>
+
+                    <div class="form-row">
+                      <label for="quantity">Quantidade<span aria-hidden="true">*</span></label>
+                      <input type="number" id="quantity" name="quantity" value="1" min="1" required />
+                    </div>
+
+                    <!-- Consentimento LGPD obrigatório -->
+                    <div class="form-group-terms">
+                      <input type="checkbox" id="terms-compra" name="terms-compra" required>
+                      <label for="terms-compra">
+                        Eu li e concordo com a <a data-trigger-modal="privacy-policy">Política de Privacidade</a>.
+                      </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-full">Finalizar compra & receber PIX</button>
+                    <p class="hint">Valor por exemplar: <strong>R$ 54,00</strong></p>
+
+                    <!-- Mensagem de feedback (atualizada pelo JS leve pós-submit/iframe.load) -->
+                    <div id="formMessage" class="form-message" role="alert" hidden></div>
+                  </form>
+                </section>
+                <!-- A Energia Precede a Matéria -->
+                <!-- Painel: DOWNLOAD -->
+                <section id="panel-download" role="tabpanel" aria-labelledby="tab-download" class="tab-panel">
+                  <form id="downloadForm" class="download-form"
+                    action="https://script.google.com/macros/s/AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A/exec"
+                    method="POST" target="gsheet_iframe">
+                    <input type="hidden" name="type" value="download">
+                    <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
+                      aria-hidden="true">
+
+                    <h3 class="form-title">Baixar eBook (PDF)</h3>
+
+                    <div class="form-row">
+                      <label for="d-name">Nome<span aria-hidden="true">*</span></label>
+                      <input type="text" id="d-name" name="d-name" required placeholder="Seu nome" />
+                    </div>
+
+                    <div class="form-row">
+                      <label for="d-email">E-mail para envio do link<span aria-hidden="true">*</span></label>
+                      <input type="email" id="d-email" name="d-email" required placeholder="seu@email.com" />
+                    </div>
+
+                    <div class="form-row">
+                      <label for="d-contrib">Contribuição (opcional)</label>
+                      <input type="number" id="d-contrib" name="d-contrib" min="0" step="1" placeholder="R$ 0,00" />
+                      <small class="hint">Sua contribuição mantém o projeto vivo. Obrigada! 💛</small>
+                    </div>
+
+                    <div class="form-group-terms">
+                      <input type="checkbox" id="terms-download" name="terms-download" required>
+                      <label for="terms-download">
+                        Eu li e concordo com a <a data-trigger-modal="privacy-policy">Política de Privacidade</a>.
+                      </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-full">Receber eBook por e-mail</button>
+
+                    <!-- Mensagem de feedback (atualizada pelo JS leve pós-submit/iframe.load) -->
+                    <div id="downloadMessage" class="form-message" role="alert" hidden></div>
+                  </form>
+                </section>
+              </div> <!-- /tab-panels -->
+            </div> <!-- /offer-interactive -->
+          </div> <!-- /offer-grid -->
+        </div> <!-- /container -->
+      </section>
+
+      <section class="author-section">
+        <h2>Sobre a autora</h2>
+        <p>
+          Anna Frota transita com ousadia entre a ficção científica e a filosofia energética. Curiosa por essência e
+          criativa por natureza, ela escreve para despertar — palavras que não apenas contam uma história, mas provocam
+          uma jornada interior. Treuss é mais do que um livro: é o reflexo de uma mente que enxerga o invisível e o
+          traduz
+          em verbo.
+        </p>
+      </section>
+    </main>
     <footer>
       <div class="container">
-          <p>&copy; 2025 Treuss - A Energia Precede a Matéria. Todos os direitos reservados.</p>
-          <div class="social-links">
-              <a href="https://instagram.com/treuss.energia" target="_blank" title="Instagram" aria-label="Instagram">
-                  <i class="fab fa-instagram"></i>
-              </a>
-              <a href="https://www.youtube.com/@treuss-energia" target="_blank" title="YouTube" aria-label="YouTube">
-                  <i class="fab fa-youtube"></i>
-              </a>
-          </div>
-          <p>
-              <a href="#privacy-policy">Política de Privacidade</a> |
-              <a href="mailto:contato@treusslivro.com">Contato</a>
-          </p>
-          <br>
-          <p style="color: #FFD700;">"O deserto não é lugar de parada, filho. Serve para estar só, situar-se e encontrar Deus. Ele é apenas uma passagem."</p>
+        <p>&copy; 2025 Treuss - A Energia Precede a Matéria. Todos os direitos reservados.</p>
+        <div class="social-links">
+          <a href="https://instagram.com/treuss.energia" target="_blank" title="Instagram" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.youtube.com/@treuss-energia" target="_blank" title="YouTube" aria-label="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+        <p>
+          <a href="privacidade.html" target="_blank">Política de Privacidade</a> |
+          <a href="mailto:contato@treusslivro.com">Contato</a>
+        </p>
+        <br>
+        <p style="color: #FFD700;">"O deserto não é lugar de parada, filho. Serve para estar só, situar-se e encontrar
+          Deus. Ele é apenas uma passagem."</p>
       </div>
     </footer>
+
+    <div id="privacy-policy-modal" class="privacy-modal-overlay">
+      <div class="privacy-modal-content" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
+        <button class="privacy-modal-close-btn" aria-label="Fechar política de privacidade">&times;</button>
+        <h2 id="privacy-modal-title">Política de Privacidade</h2>
+        <p><strong>Última atualização:</strong> 12 de agosto de 2025</p>
+        <p>Esta política explica como o projeto "Treuss – A Energia Precede a
+          Matéria" coleta, usa e protege seus dados pessoais ao interagir com este site.</p>
+        <h4>1. Quais dados coletamos?</h4>
+        <ul>
+          <li><strong>Para compra do livro impresso:</strong> Nome completo, e-mail e, opcionalmente, seu telefone.</li>
+          <li><strong>Para download do eBook:</strong> Nome e e-mail.</li>
+        </ul>
+        <h4>2. Por que coletamos esses dados? (Finalidade)</h4>
+        <p>Utilizamos seus dados exclusivamente para as seguintes finalidades:</p>
+        <ul>
+          <li><strong>Processar seu pedido de compra:</strong> As informações são usadas para gerar uma mensagem de
+            e-mail que você nos enviará. Isso nos permite combinar o pagamento (via PIX) e o envio do livro.</li>
+          <li><strong>Enviar o link do eBook:</strong> Usamos seu e-mail para entregar o link de download do eBook
+            gratuito e, se você optar, para viabilizar sua contribuição voluntária.</li>
+          <li><strong>Comunicações sobre o projeto:</strong> Podemos, esporadicamente, enviar um e-mail com novidades
+            importantes sobre o livro ou projetos relacionados. Você poderá se descadastrar a qualquer momento no
+            próprio e-mail recebido.</li>
+        </ul>
+        <h4>3. Com quem compartilhamos seus dados?</h4>
+        <p>Nós não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros para fins de marketing. Seus
+          dados são confidenciais e usados exclusivamente para as finalidades descritas acima.</p>
+        <h4>4. Quais são os seus direitos como titular dos dados?</h4>
+        <p>De acordo com a Lei Geral de Proteção de Dados (LGPD), você tem o direito de, a qualquer momento, solicitar:
+        </p>
+        <ul>
+          <li>Acesso aos seus dados armazenados conosco.</li>
+          <li>Correção de dados incompletos, inexatos ou desatualizados.</li>
+          <li>Anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desconformidade com a lei.
+          </li>
+          <li>Eliminação dos dados pessoais tratados com o seu consentimento.</li>
+        </ul>
+        <h4>5. Como entrar em contato?</h4>
+        <p>Para exercer seus direitos ou para qualquer dúvida sobre esta política, por favor, entre em contato através
+          do e-mail: <strong><a href="mailto:contato@treusslivro.com">contato@treusslivro.com</a></strong>.</p>
+      </div>
+    </div>
+
   </div>
+
   <script>
-    // JavaScript corrigido para navegação funcional
-    document.addEventListener('DOMContentLoaded', function () {
-      // --- 1. Controle do teaser de vídeo ---
-      const teaserOverlay = document.getElementById('teaser-overlay');
-      const teaserVideo = document.getElementById('teaser-video');
-      const skipButton = document.getElementById('skip-teaser');
-      const soundButton = document.getElementById('toggle-sound');
-      const closeButton = document.querySelector('.teaser-close');
+    /* =========================================================
+       TREUSS LANDING PAGE - SCRIPT UNIFICADO (v2.0)
+       =========================================================
+       Principais atualizações:
+       - Comunicação segura com Google Apps Script via postMessage
+       - Validação híbrida (HTML5 + programática)
+       - Prevenção de duplo clique com feedback visual
+       - Correções de acessibilidade
+       ========================================================= */
 
-      if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton) {
-        skipButton.addEventListener('click', function () {
-          hideTeaser();
-        });
+    (function () {
+      'use strict';
 
-        teaserVideo.addEventListener('ended', function () {
-          hideTeaser();
-        });
+      // Aguarda o carregamento completo do DOM
+      document.addEventListener('DOMContentLoaded', () => {
+        /* -------------------------------------------------------------------------- */
+        /* 1. UTILITÁRIOS                                                             */
+        /* -------------------------------------------------------------------------- */
+        // Seletores rápidos
+        const $ = (sel, root = document) => root.querySelector(sel);
+        const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-        closeButton.addEventListener('click', function () {
-          hideTeaser();
-        });
+        // Validador de e-mail
+        const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-        soundButton.addEventListener('click', function () {
-          if (teaserVideo.muted) {
-            teaserVideo.muted = false;
-            soundButton.textContent = 'MUTAR';
-          } else {
-            teaserVideo.muted = true;
-            soundButton.textContent = 'ATIVAR SOM';
-          }
-        });
+        // Função para download do eBook
+        const triggerDownload = (url) => {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'Treuss_eBook.pdf';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        };
 
-        function hideTeaser() {
+        // Exibição de mensagens de feedback
+        const showMsg = (el, type, text, isHtml = false) => {
+          if (!el) return;
+          el.hidden = false;
+          el.className = `form-message ${type}`;
+          el[isHtml ? 'innerHTML' : 'textContent'] = text;
+        };
+
+        /* -------------------------------------------------------------------------- */
+        /* 2. CONTROLE DO TEASER                                                      */
+        /* -------------------------------------------------------------------------- */
+        const teaserOverlay = $('#teaser-overlay');
+        const teaserVideo = $('#teaser-video');
+        const skipButton = $('#skip-teaser');
+        const soundButton = $('#toggle-sound');
+        const closeButton = $('.teaser-close');
+
+        const hideTeaser = () => {
+          if (!teaserOverlay) return;
           teaserOverlay.classList.add('hide');
-          teaserVideo.pause();
+          document.body.classList.remove('modal-open');
+          if (teaserVideo) teaserVideo.pause();
+        };
+
+        if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton) {
+          skipButton.addEventListener('click', hideTeaser);
+          teaserVideo.addEventListener('ended', hideTeaser);
+          closeButton.addEventListener('click', hideTeaser);
+          soundButton.addEventListener('click', () => {
+            teaserVideo.muted = !teaserVideo.muted;
+            soundButton.textContent = teaserVideo.muted ? 'ATIVAR SOM' : 'MUTAR';
+          });
+          teaserVideo.addEventListener('error', () => setTimeout(hideTeaser, 3000));
+          document.body.classList.add('modal-open');
         }
 
-        teaserVideo.addEventListener('error', function () {
-          setTimeout(hideTeaser, 3000);
-        });
-      }
+        /* -------------------------------------------------------------------------- */
+        /* 3. ROLAGEM SUAVE E EFEITOS VISUAIS                                         */
+        /* -------------------------------------------------------------------------- */
+        const smoothScrollTo = (element) => {
+          if (!element) return;
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
 
-      // --- 2. CORREÇÃO PRINCIPAL: Rolagem suave funcional ---
-      // Função para rolar suavemente para uma seção
-      function smoothScrollTo(targetId) {
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          const headerOffset = 60; // Ajuste conforme necessário
-          const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition = window.pageYOffset + elementPosition - headerOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
+        // Botão CTA do header
+        const ctaHeader = $('header .btn');
+        if (ctaHeader) {
+          ctaHeader.addEventListener('click', (e) => {
+            e.preventDefault();
+            smoothScrollTo($('#offer'));
           });
         }
-      }
 
-      // Adicionar event listeners para todos os links de navegação interna
-      const navLinks = document.querySelectorAll('a[href^="#"]');
-      navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          const href = this.getAttribute('href');
-          
-          // Verificar se é um link interno válido
-          if (href && href.length > 1 && document.querySelector(href)) {
+        // Indicador de rolagem
+        const scrollIndicator = $('.scroll-indicator');
+        if (scrollIndicator) {
+          scrollIndicator.addEventListener('click', (e) => {
             e.preventDefault();
-            smoothScrollTo(href);
-          }
-        });
-      });
-
-      // Adicionar funcionalidade ao scroll indicator
-      const scrollIndicator = document.querySelector('.scroll-indicator');
-      if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', function() {
-          // Rolar para a primeira seção de planetas
-          smoothScrollTo('.planet-section');
-        });
-      }
-
-      // --- 3. Efeitos visuais ---
-      window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        const parallax = document.querySelector('.space-background');
-        if (parallax) {
-          const speed = 0.2;
-          parallax.style.transform = `translateY(${scrolled * speed}px)`;
-        }
-
-        const indicator = document.querySelector('.scroll-indicator');
-        if (indicator) {
-          if (window.scrollY > 100) {
-            indicator.style.opacity = '0';
-            indicator.style.pointerEvents = 'none';
-          } else {
-            indicator.style.opacity = '0.7';
-            indicator.style.pointerEvents = 'auto';
-          }
-        }
-      });
-
-      // Intersection Observer para animações
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      document.querySelectorAll('.card, .planet-content').forEach(element => {
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          element.style.opacity = '0';
-          element.style.transform = 'translateY(50px)';
-          element.style.transition = 'all 0.6s ease';
-          observer.observe(element);
-        }
-      });
-
-      // --- 4. Validação e envio do formulário ---
-      const purchaseForm = document.getElementById('purchaseForm');
-      if (purchaseForm) {
-        purchaseForm.addEventListener('submit', function (event) {
-          event.preventDefault();
-          const name = document.getElementById('name').value;
-          const email = document.getElementById('email').value;
-          const phone = document.getElementById('phone').value;
-          const quantity = document.getElementById('quantity').value;
-          const formMessage = document.getElementById('formMessage');
-
-          if (formMessage) {
-            formMessage.style.display = 'none';
-            formMessage.textContent = '';
-            formMessage.className = 'form-message';
-          }
-
-          if (!name.trim() || !email.trim() || !quantity) {
-            showFormMessage('error', 'Por favor, preencha todos os campos obrigatórios (Nome, E-mail, Quantidade).');
-            return;
-          }
-
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showFormMessage('error', 'Por favor, insira um e-mail válido.');
-            return;
-          }
-
-          if (parseInt(quantity) <= 0) {
-            showFormMessage('error', 'A quantidade de livros deve ser no mínimo 1.');
-            return;
-          }
-
-          const subject = encodeURIComponent('Pedido de Compra do Livro Treuss');
-          const body = encodeURIComponent(
-            `Olá, gostaria de comprar o livro "Treuss - A Energia Precede a Matéria".\n\n` +
-            `Nome Completo: ${name}\n` +
-            `E-mail: ${email}\n` +
-            `Telefone (WhatsApp): ${phone || 'Não informado'}\n` +
-            `Quantidade de Livros: ${quantity}\n\n` +
-            `Por favor, envie os detalhes para o pagamento via PIX.`
-          );
-
-          window.location.href = `mailto:contato@treusslivro.com?subject=${subject}&body=${body}`;
-          
-          if (formMessage) {
-              showFormMessage('success', 'Seu cliente de e-mail foi aberto. Por favor, envie o e-mail para finalizar o pedido!');
-          }
-
-          setTimeout(() => {
-            purchaseForm.reset();
-            if (formMessage) {
-              formMessage.style.display = 'none';
+            const sections = $$('header, .planet-section, .reflection-section, .offer-hub, .author-section, footer');
+            const currentPosition = window.scrollY + 2;
+            let nextSection = null;
+            for (const section of sections) {
+              const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+              if (sectionTop > currentPosition) {
+                nextSection = section;
+                break;
+              }
             }
-          }, 5000);
-        });
-      }
-
-      function showFormMessage(type, message) {
-        const formMessage = document.getElementById('formMessage');
-        if (formMessage) {
-          formMessage.style.display = 'block';
-          formMessage.className = `form-message ${type}`;
-          formMessage.textContent = message;
+            if (nextSection) smoothScrollTo(nextSection);
+          });
         }
-      }
-    });
+
+        // Efeito parallax e ocultação do indicador
+        window.addEventListener('scroll', () => {
+          const scrolled = window.scrollY;
+          const parallaxBg = $('.space-background');
+          if (parallaxBg) parallaxBg.style.transform = `translateY(${scrolled * 0.2}px)`;
+          if (scrollIndicator) {
+            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100;
+            scrollIndicator.style.opacity = (scrolled > 100 || nearBottom) ? '0' : '0.7';
+            scrollIndicator.style.pointerEvents = (scrolled > 100 || nearBottom) ? 'none' : 'auto';
+          }
+        }, { passive: true });
+
+        // Animações de entrada (respeita prefers-reduced-motion)
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+
+          $$('.card, .planet-content').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(50px)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(element);
+          });
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 4. HUB DE OFERTAS (SISTEMA DE ABAS)                                        */
+        /* -------------------------------------------------------------------------- */
+        const hub = $('#offer');
+        if (hub) {
+          const tabButtons = $$('.tabs [role="tab"]', hub);
+          const panels = $$('[role="tabpanel"]', hub);
+          const tablist = $('.tabs[role="tablist"]', hub);
+
+          const setActiveByKey = (targetKey) => {
+            tabButtons.forEach(btn => {
+              const isActive = btn.dataset.tab === targetKey;
+              btn.classList.toggle('is-active', isActive);
+              btn.setAttribute('aria-selected', String(isActive));
+            });
+            panels.forEach(panel => {
+              panel.classList.toggle('is-active', panel.id === `panel-${targetKey}`);
+            });
+            const hash = `#offer-${targetKey}`;
+            if (location.hash !== hash) history.replaceState(null, '', hash);
+          };
+
+          const handleTabTrigger = (e) => {
+            const trigger = e.target.closest('[data-tab-target], [data-tab]');
+            if (!trigger) return;
+            e.preventDefault();
+            const targetKey = trigger.dataset.tabTarget || trigger.dataset.tab;
+            if (targetKey) setActiveByKey(targetKey);
+            if (hub.contains(trigger)) smoothScrollTo(tablist);
+          };
+
+          document.addEventListener('click', handleTabTrigger);
+
+          const initFromHash = () => {
+            const h = (location.hash || '').replace('#offer-', '').replace('#', '');
+            setActiveByKey((h === 'download') ? 'download' : 'compra');
+          };
+          window.addEventListener('hashchange', initFromHash);
+          initFromHash();
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 5. MODAL DE PRIVACIDADE                                                    */
+        /* -------------------------------------------------------------------------- */
+        const privacyModal = $('#privacy-policy-modal');
+        const openTriggers = $$('[data-trigger-modal="privacy-policy"]');
+        const closeBtn = $('.privacy-modal-close-btn');
+
+        const openModal = () => {
+          if (!privacyModal) return;
+          privacyModal.classList.add('is-active');
+          document.body.classList.add('modal-open');
+        };
+
+        const closeModal = () => {
+          if (!privacyModal) return;
+          privacyModal.classList.remove('is-active');
+          document.body.classList.remove('modal-open');
+        };
+
+        openTriggers.forEach(trigger => {
+          trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+          });
+        });
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (privacyModal) {
+          privacyModal.addEventListener('click', (e) => {
+            if (e.target === privacyModal) closeModal();
+          });
+        }
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && privacyModal && privacyModal.classList.contains('is-active')) {
+            closeModal();
+          }
+        });
+
+        /* -------------------------------------------------------------------------- */
+        /* 6. CONTROLE DE FORMULÁRIOS                                                 */
+        /* -------------------------------------------------------------------------- */
+        const purchaseForm = $('#purchaseForm');
+        const downloadForm = $('#downloadForm');
+        const formMsg = $('#formMessage');
+        const downloadMsg = $('#downloadMessage');
+
+        // Variável global para rastrear o último formulário submetido
+        let lastSubmit = null;
+
+        // Controle de botões (prevenção de duplo clique)
+        const disableFormButton = (form) => {
+          const button = form.querySelector('button[type="submit"]');
+          if (button) {
+            button.disabled = true;
+            button.textContent = 'Enviando...';
+          }
+        };
+
+        const enableFormButton = (form) => {
+          const button = form.querySelector('button[type="submit"]');
+          if (button) {
+            button.disabled = false;
+            button.textContent = form.id === 'purchaseForm'
+              ? 'Finalizar compra & receber PIX'
+              : 'Receber eBook por e-mail';
+          }
+        };
+
+        /* -------------------------------------------------------------------------- */
+        /* 7. COMUNICAÇÃO COM O GOOGLE APPS SCRIPT (VIA IFRAME)                       */
+        /* -------------------------------------------------------------------------- */
+        window.addEventListener('message', (event) => {
+          // Verifica se a mensagem é do nosso formulário
+          if (event.data === 'form_submitted') {
+            if (lastSubmit === 'purchase') {
+              purchaseForm?.reset();
+              enableFormButton(purchaseForm);
+              showMsg(formMsg, 'success', 'Recebido! Enviaremos instruções de pagamento por e-mail.');
+            } else if (lastSubmit === 'download') {
+              downloadForm?.reset();
+              enableFormButton(downloadForm);
+              showMsg(downloadMsg, 'success', 'Obrigada! Seu eBook foi baixado e seus dados foram registrados.');
+            }
+            lastSubmit = null;
+          }
+        });
+
+        /* -------------------------------------------------------------------------- */
+        /* 8. VALIDAÇÃO E SUBMISSÃO DE FORMULÁRIOS                                    */
+        /* -------------------------------------------------------------------------- */
+
+        // ----- FORMULÁRIO DE COMPRA -----
+        if (purchaseForm) {
+          purchaseForm.addEventListener('submit', (e) => {
+            // Referências aos elementos
+            const nameEl = $('#name', purchaseForm);
+            const emailEl = $('#email', purchaseForm);
+            const qtyEl = $('#quantity', purchaseForm);
+            const termsEl = $('#terms-compra', purchaseForm);
+
+            // Valores
+            const name = nameEl.value.trim();
+            const email = emailEl.value.trim();
+            const qty = Number(qtyEl.value);
+            const termsChecked = termsEl?.checked;
+
+            // Validações customizadas
+            if (!name) {
+              e.preventDefault();
+              showMsg(formMsg, 'error', 'Por favor, informe seu nome completo.');
+              nameEl.focus();
+              return;
+            }
+
+            if (!isValidEmail(email)) {
+              e.preventDefault();
+              showMsg(formMsg, 'error', 'Por favor, insira um e-mail válido.');
+              emailEl.focus();
+              return;
+            }
+
+            if (!Number.isFinite(qty) || qty < 1 || qty > 100) {
+              e.preventDefault();
+              showMsg(formMsg, 'error', 'Quantidade inválida (mínimo 1, máximo 100).');
+              qtyEl.focus();
+              return;
+            }
+
+            if (!termsChecked) {
+              e.preventDefault();
+              showMsg(formMsg, 'error', 'Você precisa aceitar a Política de Privacidade.');
+              termsEl?.focus();
+              return;
+            }
+
+            // Tudo válido: desabilita o botão e permite o envio nativo
+            lastSubmit = 'purchase';
+            disableFormButton(purchaseForm);
+          });
+        }
+
+        // ----- FORMULÁRIO DE DOWNLOAD -----
+        if (downloadForm) {
+          downloadForm.addEventListener('submit', (e) => {
+            const nameEl = $('#d-name', downloadForm);
+            const emailEl = $('#d-email', downloadForm);
+            const termsEl = $('#terms-download', downloadForm);
+
+            const name = nameEl.value.trim();
+            const email = emailEl.value.trim();
+            const termsChecked = termsEl?.checked;
+
+            if (!name) {
+              e.preventDefault();
+              showMsg(downloadMsg, 'error', 'Por favor, informe seu nome.');
+              nameEl.focus();
+              return;
+            }
+
+            if (!isValidEmail(email)) {
+              e.preventDefault();
+              showMsg(downloadMsg, 'error', 'Por favor, insira um e-mail válido.');
+              emailEl.focus();
+              return;
+            }
+
+            if (!termsChecked) {
+              e.preventDefault();
+              showMsg(downloadMsg, 'error', 'Você precisa aceitar a Política de Privacidade.');
+              termsEl?.focus();
+              return;
+            }
+
+            // Tudo válido: desabilita o botão e permite envio nativo
+            lastSubmit = 'download';
+            disableFormButton(downloadForm);
+
+            // Dispara o download do eBook após pequeno delay
+            setTimeout(() => triggerDownload('treuss_ebook.pdf'), 200);
+          });
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 9. OFUSCAÇÃO DE E-MAIL NO RODAPÉ (OPCIONAL)                               */
+        /* -------------------------------------------------------------------------- */
+        const contactLinks = $$('footer a[href^="mailto:"]');
+        contactLinks.forEach(link => {
+          if (link.href.includes('@')) {
+            const parts = link.href.split('@');
+            if (parts.length === 2) {
+              const user = parts[0].replace('mailto:', '');
+              const domain = parts[1];
+              link.textContent = `${user}[at]${domain}`;
+            }
+          }
+        });
+      });
+    })();
   </script>
 </body>
-</html>
 
+</html>
