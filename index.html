@@ -2208,47 +2208,75 @@
       });
     })();
   </script>
-  <!-- Adicione este script de debug no final do seu HTML, antes do </body> -->
+<!-- Adicione este script temporário no final do body -->
 <script>
-// Script de debug para verificar dados antes do envio
-document.addEventListener('DOMContentLoaded', function() {
-  const purchaseForm = document.getElementById('purchaseForm');
-  const downloadForm = document.getElementById('downloadForm');
+async function testNetlifyFunction() {
+  const functionUrl = 'https://dynamic-stroopwafel-9c9253.netlify.app/.netlify/functions/save';
   
-  function debugForm(form, formType) {
-    form.addEventListener('submit', function(e) {
-      console.log(`=== DEBUG ${formType} FORM ===`);
-      const formData = new FormData(form);
-      
-      console.log('Form action:', form.action);
-      console.log('Form method:', form.method);
-      console.log('Form target:', form.target);
-      
-      console.log('FormData entries:');
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
+  console.log('=== TESTE DE CONECTIVIDADE ===');
+  
+  // Teste 1: OPTIONS (preflight)
+  try {
+    console.log('1. Testando OPTIONS...');
+    const optionsResponse = await fetch(functionUrl, { 
+      method: 'OPTIONS',
+      headers: {
+        'Origin': 'https://annafrota.github.io',
+        'Access-Control-Request-Method': 'POST',
+        'Access-Control-Request-Headers': 'Content-Type'
       }
-      
-      // Verificar se o honeypot está vazio
-      const company = formData.get('company');
-      if (company && company.trim() !== '') {
-        console.warn('HONEYPOT DETECTADO:', company);
-      }
-      
-      // Verificar consentimento
-      const consent = formData.get('consent');
-      console.log('Consent checkbox:', consent);
-      
-      // Simular o URLSearchParams que será enviado
-      const urlParams = new URLSearchParams(formData);
-      console.log('URL-encoded data:', urlParams.toString());
-      
-      console.log('=== FIM DEBUG ===');
     });
+    console.log('OPTIONS Status:', optionsResponse.status);
+    console.log('OPTIONS Headers:', [...optionsResponse.headers.entries()]);
+  } catch (error) {
+    console.error('Erro no OPTIONS:', error);
   }
   
-  if (purchaseForm) debugForm(purchaseForm, 'PURCHASE');
-  if (downloadForm) debugForm(downloadForm, 'DOWNLOAD');
+  // Teste 2: GET simples
+  try {
+    console.log('2. Testando GET...');
+    const getResponse = await fetch(functionUrl, { method: 'GET' });
+    console.log('GET Status:', getResponse.status);
+    console.log('GET Text:', await getResponse.text());
+  } catch (error) {
+    console.error('Erro no GET:', error);
+  }
+  
+  // Teste 3: POST com dados mínimos
+  try {
+    console.log('3. Testando POST...');
+    const postData = new URLSearchParams({
+      'type': 'test',
+      'name': 'Teste',
+      'email': 'teste@exemplo.com',
+      'consent': 'on'
+    });
+    
+    const postResponse = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'https://annafrota.github.io'
+      },
+      body: postData.toString()
+    });
+    
+    console.log('POST Status:', postResponse.status);
+    console.log('POST Headers:', [...postResponse.headers.entries()]);
+    const responseText = await postResponse.text();
+    console.log('POST Response:', responseText);
+    
+  } catch (error) {
+    console.error('Erro no POST:', error);
+  }
+  
+  console.log('=== FIM TESTE ===');
+}
+
+// Executar teste automaticamente (remova depois)
+document.addEventListener('DOMContentLoaded', function() {
+  // Aguardar 2 segundos para não interferir com outros scripts
+  setTimeout(testNetlifyFunction, 2000);
 });
 </script>
 </body>
