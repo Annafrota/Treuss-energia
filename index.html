@@ -1698,6 +1698,15 @@
      - Submissão direta ao Google Apps Script via <form target="gsheet_iframe">
      - Requer um único <iframe name="gsheet_iframe"> em algum lugar do documento
        (ex.: antes desta section). 
+
+       Netlify Project:
+      dynamic-stroopwafel-9c9253
+      Admin url: https://app.netlify.com/projects/dynamic-stroopwafel-9c9253
+      Project url:  https://dynamic-stroopwafel-9c9253.netlify.app
+
+        Deployed to production URL: https://dynamic-stroopwafel-9c9253.netlify.app
+   │    Unique deploy URL: https://68a0c096aa10dc00630f2615--dynamic-stroopwafel-9c9253.netlify.app
+   │
      ======================================================= -->
       <section class="offer-hub" id="offer" aria-labelledby="offer-title">
         <div class="container">
@@ -1756,8 +1765,8 @@
               IMPORTANTE: não usar 'novalidate' aqui, para aproveitar a validação nativa.
             -->
                   <form id="purchaseForm" class="purchase-form"
-                    action="/.netlify/functions/save"
-                    method="POST" target="gsheet_iframe">
+                    action="https://dynamic-stroopwafel-9c9253.netlify.app/.netlify/functions/save" method="POST"
+                    target="gsheet_iframe">
                     <!-- Identifica o tipo no GAS -->
                     <input type="hidden" name="type" value="purchase">
                     <!-- Honeypot anti-bot (CSS .sr-only deve ocultar visualmente) -->
@@ -1805,8 +1814,8 @@
                 <!-- Painel: DOWNLOAD -->
                 <section id="panel-download" role="tabpanel" aria-labelledby="tab-download" class="tab-panel">
                   <form id="downloadForm" class="download-form"
-                    action="/.netlify/functions/save"
-                    method="POST" target="gsheet_iframe">
+                    action="https://dynamic-stroopwafel-9c9253.netlify.app/.netlify/functions/save" method="POST"
+                    target="gsheet_iframe">
                     <input type="hidden" name="type" value="download">
                     <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
                       aria-hidden="true">
@@ -1926,10 +1935,11 @@
 
   <script>
     /* =========================================================
-       TREUSS LANDING PAGE - SCRIPT UNIFICADO (v2.0)
+       TREUSS LANDING PAGE - SCRIPT UNIFICADO (v3.4)
        =========================================================
        Principais atualizações:
-       - Comunicação segura com Google Apps Script via postMessage
+       - Comunicação segura com Netlify Functions via postMessage
+       - Validação de origem (event.origin) e do iframe correto
        - Validação híbrida (HTML5 + programática)
        - Prevenção de duplo clique com feedback visual
        - Correções de acessibilidade
@@ -1938,19 +1948,13 @@
     (function () {
       'use strict';
 
-      // Aguarda o carregamento completo do DOM
       document.addEventListener('DOMContentLoaded', () => {
         /* -------------------------------------------------------------------------- */
         /* 1. UTILITÁRIOS                                                             */
         /* -------------------------------------------------------------------------- */
-        // Seletores rápidos
         const $ = (sel, root = document) => root.querySelector(sel);
         const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-
-        // Validador de e-mail
         const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-        // Função para download do eBook
         const triggerDownload = (url) => {
           const a = document.createElement('a');
           a.href = url;
@@ -1959,8 +1963,6 @@
           a.click();
           a.remove();
         };
-
-        // Exibição de mensagens de feedback
         const showMsg = (el, type, text, isHtml = false) => {
           if (!el) return;
           el.hidden = false;
@@ -1969,21 +1971,19 @@
         };
 
         /* -------------------------------------------------------------------------- */
-        /* 2. CONTROLE DO TEASER                                                      */
+        /* 2. TEASER                                                                  */
         /* -------------------------------------------------------------------------- */
         const teaserOverlay = $('#teaser-overlay');
         const teaserVideo = $('#teaser-video');
         const skipButton = $('#skip-teaser');
         const soundButton = $('#toggle-sound');
         const closeButton = $('.teaser-close');
-
         const hideTeaser = () => {
           if (!teaserOverlay) return;
           teaserOverlay.classList.add('hide');
           document.body.classList.remove('modal-open');
           if (teaserVideo) teaserVideo.pause();
         };
-
         if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton) {
           skipButton.addEventListener('click', hideTeaser);
           teaserVideo.addEventListener('ended', hideTeaser);
@@ -1997,14 +1997,9 @@
         }
 
         /* -------------------------------------------------------------------------- */
-        /* 3. ROLAGEM SUAVE E EFEITOS VISUAIS                                         */
+        /* 3. ROLAGEM SUAVE E EFEITOS                                                 */
         /* -------------------------------------------------------------------------- */
-        const smoothScrollTo = (element) => {
-          if (!element) return;
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-
-        // Botão CTA do header
+        const smoothScrollTo = (el) => el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         const ctaHeader = $('header .btn');
         if (ctaHeader) {
           ctaHeader.addEventListener('click', (e) => {
@@ -2012,91 +2007,77 @@
             smoothScrollTo($('#offer'));
           });
         }
-
-        // Indicador de rolagem
         const scrollIndicator = $('.scroll-indicator');
         if (scrollIndicator) {
           scrollIndicator.addEventListener('click', (e) => {
             e.preventDefault();
             const sections = $$('header, .planet-section, .reflection-section, .offer-hub, .author-section, footer');
-            const currentPosition = window.scrollY + 2;
-            let nextSection = null;
-            for (const section of sections) {
-              const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-              if (sectionTop > currentPosition) {
-                nextSection = section;
-                break;
-              }
+            const current = window.scrollY + 2;
+            let next = null;
+            for (const s of sections) {
+              const top = s.getBoundingClientRect().top + window.scrollY;
+              if (top > current) { next = s; break; }
             }
-            if (nextSection) smoothScrollTo(nextSection);
+            if (next) smoothScrollTo(next);
           });
         }
-
-        // Efeito parallax e ocultação do indicador
         window.addEventListener('scroll', () => {
           const scrolled = window.scrollY;
           const parallaxBg = $('.space-background');
           if (parallaxBg) parallaxBg.style.transform = `translateY(${scrolled * 0.2}px)`;
           if (scrollIndicator) {
-            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100;
+            const nearBottom = (window.innerHeight + scrolled) >= document.body.offsetHeight - 100;
             scrollIndicator.style.opacity = (scrolled > 100 || nearBottom) ? '0' : '0.7';
             scrollIndicator.style.pointerEvents = (scrolled > 100 || nearBottom) ? 'none' : 'auto';
           }
         }, { passive: true });
-
-        // Animações de entrada (respeita prefers-reduced-motion)
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          const observer = new IntersectionObserver((entries) => {
+          const obs = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
+                obs.unobserve(entry.target);
               }
             });
           }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
-
-          $$('.card, .planet-content').forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(50px)';
-            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(element);
+          $$('.card, .planet-content').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            obs.observe(el);
           });
         }
 
         /* -------------------------------------------------------------------------- */
-        /* 4. HUB DE OFERTAS (SISTEMA DE ABAS)                                        */
+        /* 4. HUB DE OFERTAS                                                          */
         /* -------------------------------------------------------------------------- */
         const hub = $('#offer');
         if (hub) {
           const tabButtons = $$('.tabs [role="tab"]', hub);
           const panels = $$('[role="tabpanel"]', hub);
           const tablist = $('.tabs[role="tablist"]', hub);
-
-          const setActiveByKey = (targetKey) => {
+          const setActiveByKey = (key) => {
             tabButtons.forEach(btn => {
-              const isActive = btn.dataset.tab === targetKey;
-              btn.classList.toggle('is-active', isActive);
-              btn.setAttribute('aria-selected', String(isActive));
+              const active = btn.dataset.tab === key;
+              btn.classList.toggle('is-active', active);
+              btn.setAttribute('aria-selected', String(active));
             });
             panels.forEach(panel => {
-              panel.classList.toggle('is-active', panel.id === `panel-${targetKey}`);
+              panel.classList.toggle('is-active', panel.id === `panel-${key}`);
             });
-            const hash = `#offer-${targetKey}`;
+            const hash = `#offer-${key}`;
             if (location.hash !== hash) history.replaceState(null, '', hash);
           };
-
-          const handleTabTrigger = (e) => {
-            const trigger = e.target.closest('[data-tab-target], [data-tab]');
-            if (!trigger) return;
+          const handleTab = (e) => {
+            const trg = e.target.closest('[data-tab-target], [data-tab]');
+            if (!trg) return;
             e.preventDefault();
-            const targetKey = trigger.dataset.tabTarget || trigger.dataset.tab;
-            if (targetKey) setActiveByKey(targetKey);
-            if (hub.contains(trigger)) smoothScrollTo(tablist);
+            const key = trg.dataset.tabTarget || trg.dataset.tab;
+            if (key) setActiveByKey(key);
+            if (hub.contains(trg)) smoothScrollTo(tablist);
           };
-
-          document.addEventListener('click', handleTabTrigger);
-
+          document.addEventListener('click', handleTab);
           const initFromHash = () => {
             const h = (location.hash || '').replace('#offer-', '').replace('#', '');
             setActiveByKey((h === 'download') ? 'download' : 'compra');
@@ -2111,74 +2092,52 @@
         const privacyModal = $('#privacy-policy-modal');
         const openTriggers = $$('[data-trigger-modal="privacy-policy"]');
         const closeBtn = $('.privacy-modal-close-btn');
-
-        const openModal = () => {
-          if (!privacyModal) return;
-          privacyModal.classList.add('is-active');
-          document.body.classList.add('modal-open');
-        };
-
-        const closeModal = () => {
-          if (!privacyModal) return;
-          privacyModal.classList.remove('is-active');
-          document.body.classList.remove('modal-open');
-        };
-
-        openTriggers.forEach(trigger => {
-          trigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal();
-          });
-        });
-
-        if (closeBtn) closeBtn.addEventListener('click', closeModal);
-        if (privacyModal) {
-          privacyModal.addEventListener('click', (e) => {
-            if (e.target === privacyModal) closeModal();
-          });
-        }
-
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && privacyModal && privacyModal.classList.contains('is-active')) {
-            closeModal();
-          }
-        });
+        const openModal = () => { privacyModal?.classList.add('is-active'); document.body.classList.add('modal-open'); };
+        const closeModal = () => { privacyModal?.classList.remove('is-active'); document.body.classList.remove('modal-open'); };
+        openTriggers.forEach(t => t.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
+        closeBtn?.addEventListener('click', closeModal);
+        privacyModal?.addEventListener('click', (e) => { if (e.target === privacyModal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && privacyModal?.classList.contains('is-active')) closeModal(); });
 
         /* -------------------------------------------------------------------------- */
-        /* 6. CONTROLE DE FORMULÁRIOS                                                 */
+        /* 6. FORMULÁRIOS                                                             */
         /* -------------------------------------------------------------------------- */
         const purchaseForm = $('#purchaseForm');
         const downloadForm = $('#downloadForm');
         const formMsg = $('#formMessage');
         const downloadMsg = $('#downloadMessage');
-
-        // Variável global para rastrear o último formulário submetido
         let lastSubmit = null;
-
-        // Controle de botões (prevenção de duplo clique)
         const disableFormButton = (form) => {
-          const button = form.querySelector('button[type="submit"]');
-          if (button) {
-            button.disabled = true;
-            button.textContent = 'Enviando...';
-          }
+          const btn = form.querySelector('button[type="submit"]');
+          if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
         };
-
         const enableFormButton = (form) => {
-          const button = form.querySelector('button[type="submit"]');
-          if (button) {
-            button.disabled = false;
-            button.textContent = form.id === 'purchaseForm'
+          const btn = form.querySelector('button[type="submit"]');
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = form.id === 'purchaseForm'
               ? 'Finalizar compra & receber PIX'
               : 'Receber eBook por e-mail';
           }
         };
 
         /* -------------------------------------------------------------------------- */
-        /* 7. COMUNICAÇÃO COM O GOOGLE APPS SCRIPT (VIA IFRAME)                       */
+        /* 7. COMUNICAÇÃO SEGURA COM BACKEND (POSTMESSAGE via IFRAME)                 */
         /* -------------------------------------------------------------------------- */
+        const iframeWin = window.frames['gsheet_iframe'];
+        const ALLOWED_ORIGINS = [
+          "https://annafrota.github.io",
+          "https://dynamic-stroopwafel-9c9253.netlify.app"
+        ];
         window.addEventListener('message', (event) => {
-          // Verifica se a mensagem é do nosso formulário
+          if (!ALLOWED_ORIGINS.includes(event.origin)) {
+            console.warn("Mensagem ignorada de origem não permitida:", event.origin);
+            return;
+          }
+          if (event.source !== iframeWin) {
+            console.warn("Mensagem ignorada: não veio do iframe esperado");
+            return;
+          }
           if (event.data === 'form_submitted') {
             if (lastSubmit === 'purchase') {
               purchaseForm?.reset();
@@ -2190,121 +2149,70 @@
               showMsg(downloadMsg, 'success', 'Obrigada! Seu eBook foi baixado e seus dados foram registrados.');
             }
             lastSubmit = null;
+          } else if (event.data === 'form_error') {
+            if (lastSubmit === 'purchase') {
+              enableFormButton(purchaseForm);
+              showMsg(formMsg, 'error', 'Ocorreu um erro. Tente novamente.');
+            } else if (lastSubmit === 'download') {
+              enableFormButton(downloadForm);
+              showMsg(downloadMsg, 'error', 'Ocorreu um erro. Tente novamente.');
+            }
+            lastSubmit = null;
           }
         });
 
         /* -------------------------------------------------------------------------- */
-        /* 8. VALIDAÇÃO E SUBMISSÃO DE FORMULÁRIOS                                    */
+        /* 8. VALIDAÇÃO E SUBMISSÃO                                                   */
         /* -------------------------------------------------------------------------- */
-
-        // ----- FORMULÁRIO DE COMPRA -----
-        if (purchaseForm) {
-          purchaseForm.addEventListener('submit', (e) => {
-            // Referências aos elementos
-            const nameEl = $('#name', purchaseForm);
-            const emailEl = $('#email', purchaseForm);
-            const qtyEl = $('#quantity', purchaseForm);
-            const termsEl = $('#terms-compra', purchaseForm);
-
-            // Valores
-            const name = nameEl.value.trim();
-            const email = emailEl.value.trim();
-            const qty = Number(qtyEl.value);
-            const termsChecked = termsEl?.checked;
-
-            // Validações customizadas
-            if (!name) {
-              e.preventDefault();
-              showMsg(formMsg, 'error', 'Por favor, informe seu nome completo.');
-              nameEl.focus();
-              return;
-            }
-
-            if (!isValidEmail(email)) {
-              e.preventDefault();
-              showMsg(formMsg, 'error', 'Por favor, insira um e-mail válido.');
-              emailEl.focus();
-              return;
-            }
-
-            if (!Number.isFinite(qty) || qty < 1 || qty > 100) {
-              e.preventDefault();
-              showMsg(formMsg, 'error', 'Quantidade inválida (mínimo 1, máximo 100).');
-              qtyEl.focus();
-              return;
-            }
-
-            if (!termsChecked) {
-              e.preventDefault();
-              showMsg(formMsg, 'error', 'Você precisa aceitar a Política de Privacidade.');
-              termsEl?.focus();
-              return;
-            }
-
-            // Tudo válido: desabilita o botão e permite o envio nativo
-            lastSubmit = 'purchase';
-            disableFormButton(purchaseForm);
-          });
-        }
-
-        // ----- FORMULÁRIO DE DOWNLOAD -----
-        if (downloadForm) {
-          downloadForm.addEventListener('submit', (e) => {
-            const nameEl = $('#d-name', downloadForm);
-            const emailEl = $('#d-email', downloadForm);
-            const termsEl = $('#terms-download', downloadForm);
-
-            const name = nameEl.value.trim();
-            const email = emailEl.value.trim();
-            const termsChecked = termsEl?.checked;
-
-            if (!name) {
-              e.preventDefault();
-              showMsg(downloadMsg, 'error', 'Por favor, informe seu nome.');
-              nameEl.focus();
-              return;
-            }
-
-            if (!isValidEmail(email)) {
-              e.preventDefault();
-              showMsg(downloadMsg, 'error', 'Por favor, insira um e-mail válido.');
-              emailEl.focus();
-              return;
-            }
-
-            if (!termsChecked) {
-              e.preventDefault();
-              showMsg(downloadMsg, 'error', 'Você precisa aceitar a Política de Privacidade.');
-              termsEl?.focus();
-              return;
-            }
-
-            // Tudo válido: desabilita o botão e permite envio nativo
-            lastSubmit = 'download';
-            disableFormButton(downloadForm);
-
-            // Dispara o download do eBook após pequeno delay
-            setTimeout(() => triggerDownload('treuss_ebook.pdf'), 200);
-          });
-        }
+        purchaseForm?.addEventListener('submit', (e) => {
+          const nameEl = $('#name', purchaseForm);
+          const emailEl = $('#email', purchaseForm);
+          const qtyEl = $('#quantity', purchaseForm);
+          const termsEl = $('#terms-compra', purchaseForm);
+          const name = nameEl.value.trim();
+          const email = emailEl.value.trim();
+          const qty = Number(qtyEl.value);
+          const termsChecked = termsEl?.checked;
+          if (!name) { e.preventDefault(); showMsg(formMsg, 'error', 'Por favor, informe seu nome completo.'); nameEl.focus(); return; }
+          if (!isValidEmail(email)) { e.preventDefault(); showMsg(formMsg, 'error', 'Por favor, insira um e-mail válido.'); emailEl.focus(); return; }
+          if (!Number.isFinite(qty) || qty < 1 || qty > 100) { e.preventDefault(); showMsg(formMsg, 'error', 'Quantidade inválida (mínimo 1, máximo 100).'); qtyEl.focus(); return; }
+          if (!termsChecked) { e.preventDefault(); showMsg(formMsg, 'error', 'Você precisa aceitar a Política de Privacidade.'); termsEl?.focus(); return; }
+          lastSubmit = 'purchase';
+          disableFormButton(purchaseForm);
+        });
+        downloadForm?.addEventListener('submit', (e) => {
+          const nameEl = $('#d-name', downloadForm);
+          const emailEl = $('#d-email', downloadForm);
+          const termsEl = $('#terms-download', downloadForm);
+          const name = nameEl.value.trim();
+          const email = emailEl.value.trim();
+          const termsChecked = termsEl?.checked;
+          if (!name) { e.preventDefault(); showMsg(downloadMsg, 'error', 'Por favor, informe seu nome.'); nameEl.focus(); return; }
+          if (!isValidEmail(email)) { e.preventDefault(); showMsg(downloadMsg, 'error', 'Por favor, insira um e-mail válido.'); emailEl.focus(); return; }
+          if (!termsChecked) { e.preventDefault(); showMsg(downloadMsg, 'error', 'Você precisa aceitar a Política de Privacidade.'); termsEl?.focus(); return; }
+          lastSubmit = 'download';
+          disableFormButton(downloadForm);
+          setTimeout(() => triggerDownload('treuss_ebook.pdf'), 200);
+        });
 
         /* -------------------------------------------------------------------------- */
-        /* 9. OFUSCAÇÃO DE E-MAIL NO RODAPÉ (OPCIONAL)                               */
+        /* 9. OFUSCAÇÃO DE E-MAIL NO RODAPÉ                                          */
         /* -------------------------------------------------------------------------- */
         const contactLinks = $$('footer a[href^="mailto:"]');
         contactLinks.forEach(link => {
           if (link.href.includes('@')) {
-            const parts = link.href.split('@');
-            if (parts.length === 2) {
-              const user = parts[0].replace('mailto:', '');
-              const domain = parts[1];
-              link.textContent = `${user}[at]${domain}`;
-            }
+            const [user, domain] = link.href.replace('mailto:', '').split('@');
+            if (user && domain) link.textContent = `${user}[at]${domain}`;
           }
         });
       });
     })();
   </script>
+
 </body>
 
 </html>
+
+git remote add origin git@github.com:Annafrota/treuss-backend.git
+
+git remote add origin git@github.com:YourGithubName/your-repo-slug.git
