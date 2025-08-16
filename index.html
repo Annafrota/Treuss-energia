@@ -1689,17 +1689,6 @@
         </p>
       </section>
 
-      <!-- 
-      GOOGLE APP SCRIPT
-      Versão 1 em 13 de ago. de 2025, 09:55
-      Código de implantação
-       AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A
-
-       App da Web - APPS_URL = 
-      https://script.google.com/macros/s/AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A/exec
-
-      -->
-
       <!-- Endpoint de submissão silenciosa (anti-CORS) -->
       <iframe name="gsheet_iframe" style="display:none" aria-hidden="true"></iframe>
 
@@ -1767,7 +1756,7 @@
               IMPORTANTE: não usar 'novalidate' aqui, para aproveitar a validação nativa.
             -->
                   <form id="purchaseForm" class="purchase-form"
-                    action="https://script.google.com/macros/s/AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A/exec"
+                    action="/.netlify/functions/save"
                     method="POST" target="gsheet_iframe">
                     <!-- Identifica o tipo no GAS -->
                     <input type="hidden" name="type" value="purchase">
@@ -1816,7 +1805,7 @@
                 <!-- Painel: DOWNLOAD -->
                 <section id="panel-download" role="tabpanel" aria-labelledby="tab-download" class="tab-panel">
                   <form id="downloadForm" class="download-form"
-                    action="https://script.google.com/macros/s/AKfycbwFAXO42ZWIkAzCD58tDi7jMZf7MTDx617FPfe7LlQIUspNpY7NQpvEmAR4TPoKLlcC6A/exec"
+                    action="/.netlify/functions/save"
                     method="POST" target="gsheet_iframe">
                     <input type="hidden" name="type" value="download">
                     <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
