@@ -2208,11 +2208,49 @@
       });
     })();
   </script>
-
+  <!-- Adicione este script de debug no final do seu HTML, antes do </body> -->
+<script>
+// Script de debug para verificar dados antes do envio
+document.addEventListener('DOMContentLoaded', function() {
+  const purchaseForm = document.getElementById('purchaseForm');
+  const downloadForm = document.getElementById('downloadForm');
+  
+  function debugForm(form, formType) {
+    form.addEventListener('submit', function(e) {
+      console.log(`=== DEBUG ${formType} FORM ===`);
+      const formData = new FormData(form);
+      
+      console.log('Form action:', form.action);
+      console.log('Form method:', form.method);
+      console.log('Form target:', form.target);
+      
+      console.log('FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+      
+      // Verificar se o honeypot está vazio
+      const company = formData.get('company');
+      if (company && company.trim() !== '') {
+        console.warn('HONEYPOT DETECTADO:', company);
+      }
+      
+      // Verificar consentimento
+      const consent = formData.get('consent');
+      console.log('Consent checkbox:', consent);
+      
+      // Simular o URLSearchParams que será enviado
+      const urlParams = new URLSearchParams(formData);
+      console.log('URL-encoded data:', urlParams.toString());
+      
+      console.log('=== FIM DEBUG ===');
+    });
+  }
+  
+  if (purchaseForm) debugForm(purchaseForm, 'PURCHASE');
+  if (downloadForm) debugForm(downloadForm, 'DOWNLOAD');
+});
+</script>
 </body>
 
 </html>
-
-git remote add origin git@github.com:Annafrota/treuss-backend.git
-
-git remote add origin git@github.com:YourGithubName/your-repo-slug.git
