@@ -6,7 +6,7 @@
   "scripts": {
     "build": "echo 'Build completo'",
     "dev": "netlify dev",
-    "test": "echo 'Testes executados com sucesso'"
+    "test": "echo 'Testes executados com sucesso'",
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
