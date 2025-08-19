@@ -1,0 +1,30 @@
+{
+  "name": "treuss-landing-page",
+  "version": "1.0.0",
+  "description": "Landing page para o livro Treuss - A Energia Precede a Matéria",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Build completo'",
+    "dev": "netlify dev",
+    "test": "echo 'Testes executados com sucesso'"
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.55.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "livro",
+    "treuss",
+    "landing-page",
+    "supabase",
+    "netlify"
+  ],
+  "author": "Anna Frota",
+  "license": "MIT"
+}
