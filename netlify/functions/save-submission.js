@@ -1,87 +1,61 @@
-// Adicione no início da função save-submission.js
-console.log('Variáveis de ambiente disponíveis:', Object.keys(process.env).filter(key => key.includes('SUPABASE')));
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Variáveis de ambiente faltando:');
-  console.error('SUPABASE_URL:', supabaseUrl || 'NÃO DEFINIDA');
-  console.error('SUPABASE_SERVICE_KEY:', supabaseKey ? 'DEFINIDA' : 'NÃO DEFINIDA');
-  
-  return {
-    statusCode: 500,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ error: 'Configuração do servidor incompleta' })
-  };
-}
-
-// netlify/functions/save-submission.js
+// Atualize o save-submission.js com melhor tratamento de erro
 const { createClient } = require('@supabase/supabase-js');
 
-// Log para debug - verificar se a função está carregando
-console.log('Função save-submission carregada');
-
 exports.handler = async (event, context) => {
-  console.log('Função iniciada - Method:', event.httpMethod);
+  console.log('Função save-submission iniciada');
   
   // Verificar método HTTP
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
       body: JSON.stringify({ error: 'Método não permitido' })
     };
   }
 
   try {
-    // Verificar variáveis de ambiente com mais detalhes
+    // Verificar variáveis de ambiente
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     
-    console.log('Variáveis de ambiente:');
-    console.log('SUPABASE_URL existe:', !!supabaseUrl);
-    console.log('SUPABASE_SERVICE_KEY existe:', !!supabaseKey);
+    console.log('Variáveis de ambiente verificadas');
     
     if (!supabaseUrl || !supabaseKey) {
-      const errorMsg = 'Variáveis de ambiente não configuradas corretamente. ';
-      if (!supabaseUrl) errorMsg += 'SUPABASE_URL faltando. ';
-      if (!supabaseKey) errorMsg += 'SUPABASE_SERVICE_KEY faltando.';
-      
+      console.error('Variáveis de ambiente faltando');
       return {
         statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: errorMsg })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ error: 'Configuração do servidor incompleta' })
       };
     }
 
-    // Parse dos dados recebidos
-    let data;
-    try {
-      data = JSON.parse(event.body);
-      console.log('Dados recebidos:', JSON.stringify(data));
-    } catch (parseError) {
-      return {
-        statusCode: 400,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'JSON inválido no corpo da requisição' })
-      };
-    }
+    // Parse dos dados
+    const data = JSON.parse(event.body);
+    console.log('Dados recebidos:', JSON.stringify(data));
     
-    // Validar dados obrigatórios
+    // Validação
     if (!data.type || !data.email || !data.name) {
       return {
         statusCode: 400,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Campos obrigatórios faltando: type, email, name' })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ error: 'Campos obrigatórios faltando' })
       };
     }
 
-    // Criar cliente Supabase
+    // Conectar ao Supabase
     const supabase = createClient(supabaseUrl, supabaseKey);
-    console.log('Cliente Supabase criado com sucesso');
-
-    // Preparar dados para inserção
+    
+    // Preparar dados
     const submissionData = {
       type: data.type,
       name: data.name,
@@ -92,44 +66,43 @@ exports.handler = async (event, context) => {
       created_at: new Date().toISOString()
     };
 
-    console.log('Dados para inserção:', submissionData);
-
-    // Inserir no Supabase
+    // Inserir no banco
     const { data: result, error } = await supabase
       .from('submissions')
       .insert([submissionData]);
 
     if (error) {
-      console.error('Erro do Supabase:', error);
+      console.error('Erro Supabase:', error);
       return {
         statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          error: 'Erro ao salvar dados no banco',
-          details: error.message 
-        })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({ error: 'Erro ao salvar dados' })
       };
     }
 
-    console.log('Dados inseridos com sucesso:', result);
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ 
         success: true, 
-        message: 'Dados salvos com sucesso',
-        data: result
+        message: 'Dados salvos com sucesso' 
       })
     };
   } catch (error) {
     console.error('Erro inesperado:', error);
     return {
       statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        error: 'Erro interno do servidor',
-        details: error.message 
-      })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ error: 'Erro interno do servidor' })
     };
   }
 };
