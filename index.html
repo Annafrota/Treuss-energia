@@ -1754,8 +1754,7 @@
                 <!-- Painel: COMPRA -->
                 <section id="panel-compra" role="tabpanel" aria-labelledby="tab-compra" class="tab-panel is-active">
 
-                  <form id="purchaseForm" class="purchase-form" action="/.netlify/functions/save-submission"
-                    method="POST" netlify-honeypot="bot-field">
+                  <form id="purchaseForm" class="purchase-form" netlify-honeypot="bot-field">
                     <!-- Identifica o tipo -->
                     <input type="hidden" name="type" value="purchase">
                     <!-- Honeypot anti-bot (CSS .sr-only deve ocultar visualmente) -->
@@ -1802,8 +1801,7 @@
                 <!-- A Energia Precede a Matéria -->
                 <!-- Painel: DOWNLOAD -->
                 <section id="panel-download" role="tabpanel" aria-labelledby="tab-download" class="tab-panel">
-                  <form id="downloadForm" class="download-form" action="/.netlify/functions/save-submission"
-                    method="POST" netlify-honeypot="bot-field">
+                  <form id="downloadForm" class="download-form" netlify-honeypot="bot-field">
                     <input type="hidden" name="type" value="download">
                     <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
                       aria-hidden="true">
