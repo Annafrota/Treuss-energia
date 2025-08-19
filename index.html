@@ -1693,21 +1693,14 @@
       <iframe name="gsheet_iframe" style="display:none" aria-hidden="true"></iframe>
 
       <!-- =======================================================
-     OFFER-HUB  (Mini-hub com abas: Compra / Download)
-     - Mantém layout original, sem fetch()
-     - Submissão direta ao Google Apps Script via <form target="gsheet_iframe">
-     - Requer um único <iframe name="gsheet_iframe"> em algum lugar do documento
-       (ex.: antes desta section). 
 
-       Netlify Project:
-      dynamic-stroopwafel-9c9253
-      Admin url: https://app.netlify.com/projects/dynamic-stroopwafel-9c9253
-      Project url:  https://dynamic-stroopwafel-9c9253.netlify.app
+      OFFER-HUB  (Mini-hub com abas: Compra / Download)
+        Sem fetch() - Anti-CORS
+      
+        EnvVar:
+          https://app.netlify.com/projects/treuss/configuration/env
+      ======================================================= -->
 
-        Deployed to production URL: https://dynamic-stroopwafel-9c9253.netlify.app
-   │    Unique deploy URL: https://68a0c096aa10dc00630f2615--dynamic-stroopwafel-9c9253.netlify.app
-   │
-     ======================================================= -->
       <section class="offer-hub" id="offer" aria-labelledby="offer-title">
         <div class="container">
           <h2 id="offer-title" class="section-title">Escolha como mergulhar nesta jornada: </h2>
@@ -1760,14 +1753,10 @@
               <div class="tab-panels">
                 <!-- Painel: COMPRA -->
                 <section id="panel-compra" role="tabpanel" aria-labelledby="tab-compra" class="tab-panel is-active">
-                  <!--
-              Anti-CORS: envio direto ao Apps Script (exec), sem JS de rede.
-              IMPORTANTE: não usar 'novalidate' aqui, para aproveitar a validação nativa.
-            -->
-                  <form id="purchaseForm" class="purchase-form"
-                    action="https://dynamic-stroopwafel-9c9253.netlify.app/.netlify/functions/save" method="POST"
-                    target="gsheet_iframe">
-                    <!-- Identifica o tipo no GAS -->
+
+                  <form id="purchaseForm" class="purchase-form" action="/.netlify/functions/save-submission"
+                    method="POST" netlify-honeypot="bot-field">
+                    <!-- Identifica o tipo -->
                     <input type="hidden" name="type" value="purchase">
                     <!-- Honeypot anti-bot (CSS .sr-only deve ocultar visualmente) -->
                     <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
@@ -1813,9 +1802,8 @@
                 <!-- A Energia Precede a Matéria -->
                 <!-- Painel: DOWNLOAD -->
                 <section id="panel-download" role="tabpanel" aria-labelledby="tab-download" class="tab-panel">
-                  <form id="downloadForm" class="download-form"
-                    action="https://dynamic-stroopwafel-9c9253.netlify.app/.netlify/functions/save" method="POST"
-                    target="gsheet_iframe">
+                  <form id="downloadForm" class="download-form" action="/.netlify/functions/save-submission"
+                    method="POST" netlify-honeypot="bot-field">
                     <input type="hidden" name="type" value="download">
                     <input type="text" name="company" class="sr-only" tabindex="-1" autocomplete="off"
                       aria-hidden="true">
@@ -1942,8 +1930,7 @@
        - Validação de origem (event.origin) e do iframe correto
        - Validação híbrida (HTML5 + programática)
        - Prevenção de duplo clique com feedback visual
-       - Correções de acessibilidade
-       ========================================================= */
+      ========================================================= */
 
     (function () {
       'use strict';
@@ -2164,35 +2151,76 @@
         /* -------------------------------------------------------------------------- */
         /* 8. VALIDAÇÃO E SUBMISSÃO                                                   */
         /* -------------------------------------------------------------------------- */
-        purchaseForm?.addEventListener('submit', (e) => {
-          const nameEl = $('#name', purchaseForm);
-          const emailEl = $('#email', purchaseForm);
-          const qtyEl = $('#quantity', purchaseForm);
-          const termsEl = $('#terms-compra', purchaseForm);
-          const name = nameEl.value.trim();
-          const email = emailEl.value.trim();
-          const qty = Number(qtyEl.value);
-          const termsChecked = termsEl?.checked;
-          if (!name) { e.preventDefault(); showMsg(formMsg, 'error', 'Por favor, informe seu nome completo.'); nameEl.focus(); return; }
-          if (!isValidEmail(email)) { e.preventDefault(); showMsg(formMsg, 'error', 'Por favor, insira um e-mail válido.'); emailEl.focus(); return; }
-          if (!Number.isFinite(qty) || qty < 1 || qty > 100) { e.preventDefault(); showMsg(formMsg, 'error', 'Quantidade inválida (mínimo 1, máximo 100).'); qtyEl.focus(); return; }
-          if (!termsChecked) { e.preventDefault(); showMsg(formMsg, 'error', 'Você precisa aceitar a Política de Privacidade.'); termsEl?.focus(); return; }
-          lastSubmit = 'purchase';
-          disableFormButton(purchaseForm);
+        
+        // Formulário de compra
+        purchaseForm?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          // Suas validações atuais aqui...
+          if (!validatePurchaseForm()) return;
+
+          const formData = new FormData(purchaseForm);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            disableFormButton(purchaseForm);
+
+            const response = await fetch('/.netlify/functions/save-submission', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              showMsg(formMsg, 'success', 'Recebido! Enviaremos instruções de pagamento por e-mail.');
+              purchaseForm.reset();
+            } else {
+              throw new Error('Erro ao enviar formulário');
+            }
+          } catch (error) {
+            showMsg(formMsg, 'error', 'Ocorreu um erro. Tente novamente.');
+          } finally {
+            enableFormButton(purchaseForm);
+          }
         });
-        downloadForm?.addEventListener('submit', (e) => {
-          const nameEl = $('#d-name', downloadForm);
-          const emailEl = $('#d-email', downloadForm);
-          const termsEl = $('#terms-download', downloadForm);
-          const name = nameEl.value.trim();
-          const email = emailEl.value.trim();
-          const termsChecked = termsEl?.checked;
-          if (!name) { e.preventDefault(); showMsg(downloadMsg, 'error', 'Por favor, informe seu nome.'); nameEl.focus(); return; }
-          if (!isValidEmail(email)) { e.preventDefault(); showMsg(downloadMsg, 'error', 'Por favor, insira um e-mail válido.'); emailEl.focus(); return; }
-          if (!termsChecked) { e.preventDefault(); showMsg(downloadMsg, 'error', 'Você precisa aceitar a Política de Privacidade.'); termsEl?.focus(); return; }
-          lastSubmit = 'download';
-          disableFormButton(downloadForm);
-          setTimeout(() => triggerDownload('treuss_ebook.pdf'), 200);
+
+        // Formulário de download
+        downloadForm?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          // Suas validações atuais aqui...
+          if (!validateDownloadForm()) return;
+
+          const formData = new FormData(downloadForm);
+          const data = Object.fromEntries(formData.entries());
+
+          try {
+            disableFormButton(downloadForm);
+
+            const response = await fetch('/.netlify/functions/save-submission', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              showMsg(downloadMsg, 'success', 'Obrigada! Seu eBook foi baixado e seus dados foram registrados.');
+              downloadForm.reset();
+              triggerDownload('treuss_ebook.pdf');
+            } else {
+              throw new Error('Erro ao enviar formulário');
+            }
+          } catch (error) {
+            showMsg(downloadMsg, 'error', 'Ocorreu um erro. Tente novamente.');
+          } finally {
+            enableFormButton(downloadForm);
+          }
         });
 
         /* -------------------------------------------------------------------------- */
