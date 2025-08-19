@@ -1,3 +1,21 @@
+// Adicione no início da função save-submission.js
+console.log('Variáveis de ambiente disponíveis:', Object.keys(process.env).filter(key => key.includes('SUPABASE')));
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Variáveis de ambiente faltando:');
+  console.error('SUPABASE_URL:', supabaseUrl || 'NÃO DEFINIDA');
+  console.error('SUPABASE_SERVICE_KEY:', supabaseKey ? 'DEFINIDA' : 'NÃO DEFINIDA');
+  
+  return {
+    statusCode: 500,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ error: 'Configuração do servidor incompleta' })
+  };
+}
+
 // netlify/functions/save-submission.js
 const { createClient } = require('@supabase/supabase-js');
 
