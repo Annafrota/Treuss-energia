@@ -14,7 +14,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Função: e-mail estilizado para compra
 async function sendPurchaseEmail(data) {
-  const logoUrl = "../../treuss_capa_livro.jpg"; 
+  const logoUrl = "../../treuss_capa_livro.jpg";
 
   const html = `
   <div style="font-family:Arial, sans-serif; background:#111; color:#f5f5f5; padding:20px; border-radius:8px;">
@@ -139,7 +139,7 @@ exports.handler = async (event, context) => {
     }
 
     const type = (payload.type || '').toLowerCase();
-    if (!['purchase','download'].includes(type)) {
+    if (!['purchase', 'download'].includes(type)) {
       return { statusCode: 400, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: 'Tipo inválido' }) };
     }
 
@@ -158,7 +158,7 @@ exports.handler = async (event, context) => {
 
     if (type === 'purchase') {
       quantity = Number(payload.quantity || 1);
-      const required = ['postal_code','address_line1','district','city','state','country'];
+      const required = ['postal_code', 'address_line1', 'district', 'city', 'state', 'country'];
       for (const f of required) {
         if (!payload[f] || String(payload[f]).trim() === '') {
           return { statusCode: 400, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: `Campo obrigatório faltando: ${f}` }) };
@@ -226,9 +226,21 @@ exports.handler = async (event, context) => {
       } else if (type === 'download') {
         await sendDownloadEmail(submissionData);
       }
+
+      // atualizar status como "sent"
+      await supabase
+        .from('submissions')
+        .update({ email_status: 'sent' })
+        .eq('id', result?.[0]?.id);
+
     } catch (mailErr) {
       console.error('Erro ao enviar e-mail:', mailErr);
-      // não falhar a requisição por causa de e-mail
+
+      // atualizar status como "failed"
+      await supabase
+        .from('submissions')
+        .update({ email_status: 'failed' })
+        .eq('id', result?.[0]?.id);
     }
 
     const message = type === 'purchase'
