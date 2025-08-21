@@ -721,6 +721,17 @@
       gap: .9rem;
     }
 
+    textarea {
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(0, 0, 0, 0.4);
+      color: var(--color-accent-white);
+      font-family: var(--font-body);
+      resize: vertical;
+      min-height: 80px;
+    }
+
     .form-title {
       text-align: center;
       margin: 0 0 .25rem;
@@ -1774,7 +1785,7 @@
                 </button>
                 <button class="offer-card" data-tab-target="download" aria-describedby="card-download-desc">
                   <h3>eBook gratuito</h3>
-                  <p id="card-download-desc">Enviamos o PDF por e-mail. Opcional: contribua com qualquer valor.</p>
+                  <p id="card-download-desc">Enviamos o link para o PDF por e-mail. Opcional: contribua com qualquer valor.</p>
                   <span class="card-cta">Baixar e contribuir</span>
                 </button>
               </div>
@@ -1824,6 +1835,7 @@
                       <input type="number" id="quantity" name="quantity" value="1" min="1" required />
                     </div>
                     <p class="hint">Valor por exemplar: <strong>R$ 54,00</strong></p>
+                    <p class="hint">Valor total: <strong id="total-value">R$ 54,00</strong></p>
 
                     <h4 style="margin-top: 1.5rem; color: var(--color-treuss-gold);">Endereço de entrega</h4>
 
@@ -2317,6 +2329,19 @@
           }
         });
 
+        // Calcular valor total XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx
+        const quantityInput = document.getElementById('quantity');
+        const totalValue = document.getElementById('total-value');
+
+        function updateTotal() {
+          const quantity = parseInt(quantityInput.value) || 1;
+          const total = quantity * 54;
+          totalValue.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        quantityInput.addEventListener('input', updateTotal);
+        updateTotal(); // inicializar
+
         // Formulário de download
         downloadForm?.addEventListener('submit', async (e) => {
           e.preventDefault();
@@ -2366,7 +2391,7 @@
             if (response.ok) {
               showMsg(downloadMsg, 'success', 'Obrigada! Em instantes você receberá um e-mail com o link para download.');
               downloadForm.reset();
-              triggerDownload('treuss_ebook.pdf');
+              // triggerDownload('treuss_ebook.pdf'); O DOWNLOAD SERÀ FEITO POR LINK ENVIADO EM E-MAIL
             } else {
               throw new Error(result.error || 'Erro ao processar solicitação');
             }
