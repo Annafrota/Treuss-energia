@@ -1,15 +1,3 @@
-/*
-  (Template de Compra (Purchase) ID: template_gv4q0sc
-  Template de Download (eBook) ID: template_6w2zzz8) ???????
-
-  Google Analytics:
-  Fluxo Treuss 
-  URL do fluxo: https://treuss.netlify.app/
-  Código do fluxo: 12058584106
-  ID da Métrica: G-XL1VCX8ZKK
-
-*/
-
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
 
@@ -18,7 +6,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 exports.handler = async (event, context) => {
   console.log('Função save-submission iniciada');
-
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -169,6 +156,7 @@ exports.handler = async (event, context) => {
         `;
       }
 
+      console.log('Enviando email para:', email);
       const { data, error } = await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
         to: email,
