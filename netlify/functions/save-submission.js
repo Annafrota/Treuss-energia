@@ -1,11 +1,30 @@
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
 
-// Inicializar o Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Inicializar o Resend com verificação
+let resend;
+try {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY não está definida');
+  }
+  resend = new Resend(process.env.RESEND_API_KEY);
+  console.log('Resend inicializado com sucesso');
+} catch (err) {
+  console.error('Erro ao inicializar Resend:', err.message);
+}
 
 exports.handler = async (event, context) => {
   console.log('Função save-submission iniciada');
+
+  // Verificar se o Resend foi inicializado corretamente
+  if (!resend) {
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Configuração de e-mail não inicializada' })
+    };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -33,7 +52,7 @@ exports.handler = async (event, context) => {
 
     const payload = JSON.parse(event.body || '{}');
 
-    // Honeypot anti-bot re_ZDAby
+    // Honeypot anti-bot
     if (payload.company) {
       return {
         statusCode: 200,
@@ -129,6 +148,9 @@ exports.handler = async (event, context) => {
     let emailError = null;
     
     try {
+      console.log('Tentando enviar e-mail para:', email);
+      console.log('Usando from email:', process.env.RESEND_FROM_EMAIL);
+      
       let emailSubject, emailHtml;
 
       if (type === 'purchase') {
@@ -156,7 +178,6 @@ exports.handler = async (event, context) => {
         `;
       }
 
-      console.log('Enviando email para:', email);
       const { data, error } = await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
         to: email,
@@ -165,6 +186,7 @@ exports.handler = async (event, context) => {
       });
 
       if (error) {
+        console.error('Erro específico do Resend:', JSON.stringify(error, null, 2));
         throw new Error(error.message);
       }
 
@@ -179,14 +201,13 @@ exports.handler = async (event, context) => {
 
     } catch (err) {
       emailError = err.message;
-      console.error('Erro ao enviar e-mail:', err);
-      console.error('Erro completo ao enviar e-mail:', JSON.stringify(err, null, 2));
-      console.error('Detalhes do erro:', err.response ? err.response.data : 'Sem resposta');
+      console.error('Erro completo ao enviar e-mail:', err);
+      console.error('Stack trace:', err.stack);
 
       // Atualizar o status do e-mail no Supabase para 'failed'
       await supabase
         .from('submissions')
-        .update({ email_status: 'failed' })
+        .update({ email_status: 'failed', email_error: err.message })
         .eq('id', result[0].id);
     }
 
