@@ -179,7 +179,7 @@ exports.handler = async (event, context) => {
       }
 
       const { data, error } = await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
+        from: 'Equipe Livro Treuss <' + process.env.RESEND_FROM_EMAIL + '>',
         to: email,
         subject: emailSubject,
         html: emailHtml,
