@@ -1,6 +1,6 @@
 /*
-  Template de Compra (Purchase) ID: template_gv4q0sc
-  Template de Download (eBook) ID: template_6w2zzz8
+  (Template de Compra (Purchase) ID: template_gv4q0sc
+  Template de Download (eBook) ID: template_6w2zzz8) ???????
 
   Google Analytics:
   Fluxo Treuss 
@@ -8,11 +8,13 @@
   Código do fluxo: 12058584106
   ID da Métrica: G-XL1VCX8ZKK
 
-  O envio de e-mails agora é totalmente gerenciado pelo frontend através do EmailJS, 
-  conforme implementado em index.html (Landing Page)
 */
 
 const { createClient } = require('@supabase/supabase-js');
+const { Resend } = require('resend');
+
+// Inicializar o Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 exports.handler = async (event, context) => {
   console.log('Função save-submission iniciada');
@@ -118,7 +120,7 @@ exports.handler = async (event, context) => {
       delivery_notes,
       pix_key_shown: type === 'download',
       created_at: new Date().toISOString(),
-      email_status: 'sent' // Agora sempre marcado como enviado já que o EmailJS cuida do envio
+      email_status: 'pending'
     };
 
     const { data: result, error: insertError } = await supabase
@@ -135,6 +137,69 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Enviar e-mail via Resend
+    let emailSent = false;
+    let emailError = null;
+    
+    try {
+      let emailSubject, emailHtml;
+
+      if (type === 'purchase') {
+        emailSubject = 'Confirmação de Compra - Treuss';
+        emailHtml = `
+          <h1>Olá, ${name}!</h1>
+          <p>Obrigado por sua compra do livro <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
+          <p>Seu pedido foi registrado com sucesso. Em breve enviaremos um e-mail com o Comprovante de Pedido e instruções de pagamento.</p>
+          <p><strong>Resumo do pedido:</strong></p>
+          <ul>
+            <li>Quantidade: ${quantity} exemplar(es)</li>
+            <li>Valor total: R$ ${(quantity * 54).toFixed(2)}</li>
+          </ul>
+          <p>Atenciosamente,<br>Equipe Treuss</p>
+        `;
+      } else if (type === 'download') {
+        emailSubject = 'Download do eBook - Treuss';
+        emailHtml = `
+          <h1>Olá, ${name}!</h1>
+          <p>Obrigado por baixar o eBook <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
+          <p>Clique no link abaixo para fazer o download:</p>
+          <p><a href="https://drive.google.com/your-download-link" style="background-color: #FFD700; color: black; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Fazer Download</a></p>
+          <p>Chave PIX para contribuição: <strong>28421905805</strong></p>
+          <p>Atenciosamente,<br>Equipe Treuss</p>
+        `;
+      }
+
+      const { data, error } = await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL,
+        to: email,
+        subject: emailSubject,
+        html: emailHtml,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      emailSent = true;
+      console.log('E-mail enviado com sucesso:', data);
+
+      // Atualizar o status do e-mail no Supabase para 'sent'
+      await supabase
+        .from('submissions')
+        .update({ email_status: 'sent' })
+        .eq('id', result[0].id);
+
+    } catch (err) {
+      emailError = err.message;
+      console.error('Erro ao enviar e-mail:', err);
+
+      // Atualizar o status do e-mail no Supabase para 'failed'
+      await supabase
+        .from('submissions')
+        .update({ email_status: 'failed' })
+        .eq('id', result[0].id);
+    }
+
     const message = type === 'purchase'
       ? 'Pedido registrado. Você receberá por e-mail o Comprovante de Pedido com os dados completos.'
       : 'Registro efetuado. O link do eBook será enviado por e-mail.';
@@ -146,8 +211,8 @@ exports.handler = async (event, context) => {
         success: true, 
         message, 
         id: result?.[0]?.id || null,
-        emailSent: true, // Sempre true já que o EmailJS cuida do envio
-        emailError: null
+        emailSent,
+        emailError
       })
     };
 
