@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
 
     const payload = JSON.parse(event.body || '{}');
 
-    // Honeypot anti-bot
+    // Honeypot anti-bot re_ZDAby
     if (payload.company) {
       return {
         statusCode: 200,
@@ -180,6 +180,8 @@ exports.handler = async (event, context) => {
     } catch (err) {
       emailError = err.message;
       console.error('Erro ao enviar e-mail:', err);
+      console.error('Erro completo ao enviar e-mail:', JSON.stringify(err, null, 2));
+      console.error('Detalhes do erro:', err.response ? err.response.data : 'Sem resposta');
 
       // Atualizar o status do e-mail no Supabase para 'failed'
       await supabase
