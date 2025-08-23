@@ -244,7 +244,7 @@ exports.handler = async (event, context) => {
 
         emailSubject = 'Confirmação de Compra - Treuss';
         
-        // HTML version (otimizada para mobile) - Adicionada exibição do código PIX
+        // HTML version (otimizada para mobile) - Alterações no tag <img> e nota no rodapé
         emailHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -295,7 +295,7 @@ exports.handler = async (event, context) => {
               <!-- QR Code Section -->
               <div style="text-align: center; margin: 30px 0;">
                 <h3 style="color: #333;">Pagamento via PIX</h3>
-                <img src="${qrCodeImage}" alt="QR Code PIX para pagamento" width="256" style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%; height: auto;">
+                <img src="${qrCodeImage}" alt="QR Code para pagamento PIX" title="QR Code PIX" width="256" height="256" style="display: block; border: 1px solid #ddd; border-radius: 8px; max-width: 100%; height: auto;">
                 <p style="color: #777; font-size: 14px;">Escaneie este QR Code com seu aplicativo bancário</p>
               </div>
               
@@ -325,7 +325,7 @@ exports.handler = async (event, context) => {
           <tr>
             <td style="background-color: #0a0a0a; color: #fff; padding: 15px; text-align: center; font-size: 12px;">
               <p style="margin: 0;">Equipe Treuss | <a href="https://treuss.com" style="color: #ffd700; text-decoration: none;">treuss.com</a></p>
-              <p style="margin: 10px 0 0; font-size: 11px; color: #ccc;">Caso tenha problemas com o QR Code, você pode copiar o código PIX acima e colar manualmente em seu aplicativo bancário.</p>
+              <p style="margin: 10px 0 0; font-size: 11px; color: #ccc;">Caso o QR Code não apareça, habilite imagens externas nas configurações do Gmail ou use o código PIX acima para copia e cola em seu aplicativo bancário.</p>
             </td>
           </tr>
         </table>
@@ -335,7 +335,7 @@ exports.handler = async (event, context) => {
 </body>
 </html>`;
         
-        // Text version for fallback - Adicionada exibição do código PIX
+        // Text version for fallback - Adicionada nota sobre imagens no Gmail
         textVersion = `Confirmação de Compra - Treuss
 
 Olá ${name},
@@ -355,10 +355,10 @@ Resumo do pedido:
 
 Após a confirmação do pagamento, seu pedido será enviado em até 2 dias úteis.
 
-Equipe Treuss
-https://treuss.com
+Caso o QR Code não apareça no e-mail, habilite imagens externas nas configurações do Gmail ou use o código PIX acima para copia e cola.
 
-Caso tenha problemas com o QR Code, você pode copiar o código PIX acima e colar manualmente em seu aplicativo bancário.`;
+Equipe Treuss
+https://treuss.com`;
 
       } else if (type === 'download') {
         emailSubject = 'Download do eBook - Treuss';
