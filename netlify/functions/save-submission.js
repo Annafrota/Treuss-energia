@@ -14,7 +14,7 @@ try {
   console.error('Erro ao inicializar Resend:', err.message);
 }
 
-// Função para calcular CRC16 (obrigatório para PIX)
+// Função para calcular CRC16 (obrigatório para PIX) - Adicionada restrição a 16 bits no loop
 function calculateCRC16(data) {
   let crc = 0xFFFF;
   for (let i = 0; i < data.length; i++) {
@@ -25,6 +25,7 @@ function calculateCRC16(data) {
       } else {
         crc <<= 1;
       }
+      crc &= 0xFFFF; // Correção: Restringe a 16 bits para evitar overflow
     }
   }
   return crc & 0xFFFF;
@@ -75,8 +76,8 @@ function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sa
   const crc = calculateCRC16(payload);
   const crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
   
-  // Substituir o placeholder pelo CRC16 calculado
-  return payload.slice(0, -4) + crcHex;
+  // Correção: Anexar o CRC após o "6304", em vez de substituir
+  return payload + crcHex;
 }
 
 exports.handler = async (event, context) => {
@@ -398,7 +399,7 @@ Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar 
               <p style="color: #555;">Clique no link abaixo para fazer o download:</p>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://treus.com/treuss_ebook.pdf" style="background-color: #ffd700; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Fazer Download do eBook</a>
+                <a href="https://treuss.com/treuss_ebook.pdf" style="background-color: #ffd700; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Fazer Download do eBook</a>
               </div>
               
               <div style="background-color: #f5f5f5; border-radius: 5px; padding: 15px; margin: 20px 0;">
@@ -422,7 +423,7 @@ Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar 
 </body>
 </html>`;
         
-        // Text version for fallback
+        // Text version for fallback - Correção: Usar o link real
         textVersion = `Download do eBook - Treuss
 
 Olá ${name},
@@ -430,7 +431,7 @@ Olá ${name},
 Obrigado por baixar o eBook "Treuss - A Energia Precede a Matéria".
 
 Para fazer o download, acesse:
-https://drive.google.com/your-download-link
+https://treuss.com/treuss_ebook.pdf
 
 Chave PIX para contribuição: 28421905805
 
