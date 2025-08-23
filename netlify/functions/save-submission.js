@@ -14,27 +14,69 @@ try {
   console.error('Erro ao inicializar Resend:', err.message);
 }
 
-// Função para gerar payload PIX
-function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sao Paulo") {
+// Função para calcular CRC16 (obrigatório para PIX)
+function calculateCRC16(str) {
+  let crc = 0xFFFF;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      if (crc & 0x8000) {
+        crc = (crc << 1) ^ 0x1021;
+      } else {
+        crc = crc << 1;
+      }
+    }
+  }
+  return crc & 0xFFFF;
+}
+
+// Função para gerar payload PIX correto conforme padrão BCB
+function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sao Paulo", description = "Livro Treuss") {
   const amountFormatted = amount.toFixed(2);
-  const transactionId = Math.random().toString(36).substring(2, 15);
   
-  // Formato básico do payload PIX (versão simplificada)
-  const payload = [
-    "000201", // Início do payload
-    "26580014br.gov.bcb.pix", // GUI do PIX
-    "01" + pixKey.length.toString().padStart(2, '0') + pixKey, // Chave PIX
-    "52040000", // Categoria comercial
-    "5303986", // Moeda (986 = BRL)
-    "54" + amountFormatted.length.toString().padStart(2, '0') + amountFormatted, // Valor
-    "5802BR", // País
-    "59" + recipient.length.toString().padStart(2, '0') + recipient, // Nome do beneficiário
-    "60" + city.length.toString().padStart(2, '0') + city, // Cidade
-    "62070503***", // Additional data field
-    "6304" // CRC16
-  ].join('');
+  // Construir o payload conforme padrão EMVco
+  let payload = "";
   
-  return payload;
+  // Payload Format Indicator (Obrigatório)
+  payload += "000201";
+  
+  // Merchant Account Information (Obrigatório)
+  let merchantInfo = "";
+  merchantInfo += "0014br.gov.bcb.pix"; // GUI do PIX
+  merchantInfo += "01" + String(pixKey.length).padStart(2, '0') + pixKey; // Chave PIX
+  
+  payload += "26" + String(merchantInfo.length).padStart(2, '0') + merchantInfo;
+  
+  // Merchant Category Code (Opcional)
+  payload += "52040000";
+  
+  // Transaction Currency (Obrigatório) - 986 = BRL
+  payload += "5303986";
+  
+  // Transaction Amount (Obrigatório)
+  payload += "54" + String(amountFormatted.length).padStart(2, '0') + amountFormatted;
+  
+  // Country Code (Obrigatório) - BR = Brasil
+  payload += "5802BR";
+  
+  // Merchant Name (Obrigatório)
+  payload += "59" + String(recipient.length).padStart(2, '0') + recipient;
+  
+  // Merchant City (Obrigatório)
+  payload += "60" + String(city.length).padStart(2, '0') + city;
+  
+  // Additional Data Field - TXID (Opcional)
+  const txid = "***"; // TXID fixo para QR Code estático
+  payload += "62" + String(txid.length + 5).padStart(2, '0') + "05" + String(txid.length).padStart(2, '0') + txid;
+  
+  // CRC16 (Obrigatório)
+  payload += "6304";
+  
+  // Calcular CRC16
+  const crc = calculateCRC16(payload);
+  const crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
+  
+  return payload + crcHex;
 }
 
 exports.handler = async (event, context) => {
