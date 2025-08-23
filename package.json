@@ -11,13 +11,14 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.0",
+    "qrcode": "^1.5.4",
     "resend": "^6.0.1"
   },
   "devDependencies": {
     "netlify-cli": "^12.0.0"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">18.0.0"
   },
   "keywords": [
     "livro",
