@@ -14,7 +14,7 @@ try {
   console.error('Erro ao inicializar Resend:', err.message);
 }
 
-// Função para calcular CRC16 (obrigatório para PIX) - Adicionada restrição a 16 bits no loop
+// Função para calcular CRC16 (obrigatório para PIX)
 function calculateCRC16(data) {
   let crc = 0xFFFF;
   for (let i = 0; i < data.length; i++) {
@@ -25,7 +25,7 @@ function calculateCRC16(data) {
       } else {
         crc <<= 1;
       }
-      crc &= 0xFFFF; // Correção: Restringe a 16 bits para evitar overflow
+      crc &= 0xFFFF; // Restringe a 16 bits para evitar overflow
     }
   }
   return crc & 0xFFFF;
@@ -76,7 +76,7 @@ function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sa
   const crc = calculateCRC16(payload);
   const crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
   
-  // Correção: Anexar o CRC após o "6304", em vez de substituir
+  // Anexar o CRC após o "6304"
   return payload + crcHex;
 }
 
@@ -223,10 +223,11 @@ exports.handler = async (event, context) => {
       if (type === 'purchase') {
         const totalAmount = quantity * 54;
         
-        // Gerar QR Code PIX em base64
+        // Gerar QR Code PIX e payload
         let qrCodeImage = '';
+        let pixPayload = ''; // Variável para armazenar o payload
         try {
-          const pixPayload = generatePixPayload('28421905805', totalAmount);
+          pixPayload = generatePixPayload('28421905805', totalAmount);
           console.log('Payload PIX gerado:', pixPayload);
           
           qrCodeImage = await QRCode.toDataURL(pixPayload, {
@@ -243,7 +244,7 @@ exports.handler = async (event, context) => {
 
         emailSubject = 'Confirmação de Compra - Treuss';
         
-        // HTML version (otimizada para mobile)
+        // HTML version (otimizada para mobile) - Adicionada exibição do código PIX
         emailHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -303,6 +304,8 @@ exports.handler = async (event, context) => {
                 <h4 style="color: #333; margin-top: 0;">Caso não consiga escanear o QR Code:</h4>
                 <p style="margin: 10px 0;"><strong>Chave PIX:</strong></p>
                 <p style="background-color: #eee; padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace;">28421905805</p>
+                <p style="margin: 10px 0;"><strong>Código PIX (Copia e Cola):</strong></p>
+                <p style="background-color: #eee; padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace;">${pixPayload}</p>
                 <p style="margin: 10px 0;"><strong>Valor:</strong> R$ ${totalAmount.toFixed(2)}</p>
                 <p style="margin: 10px 0;"><strong>Beneficiário:</strong> Anna Frota</p>
               </div>
@@ -322,7 +325,7 @@ exports.handler = async (event, context) => {
           <tr>
             <td style="background-color: #0a0a0a; color: #fff; padding: 15px; text-align: center; font-size: 12px;">
               <p style="margin: 0;">Equipe Treuss | <a href="https://treuss.com" style="color: #ffd700; text-decoration: none;">treuss.com</a></p>
-              <p style="margin: 10px 0 0; font-size: 11px; color: #ccc;">Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar manualmente em seu aplicativo bancário.</p>
+              <p style="margin: 10px 0 0; font-size: 11px; color: #ccc;">Caso tenha problemas com o QR Code, você pode copiar o código PIX acima e colar manualmente em seu aplicativo bancário.</p>
             </td>
           </tr>
         </table>
@@ -332,7 +335,7 @@ exports.handler = async (event, context) => {
 </body>
 </html>`;
         
-        // Text version for fallback
+        // Text version for fallback - Adicionada exibição do código PIX
         textVersion = `Confirmação de Compra - Treuss
 
 Olá ${name},
@@ -342,6 +345,7 @@ Obrigado por sua compra do livro "Treuss - A Energia Precede a Matéria".
 Para realizar o pagamento via PIX:
 
 Chave PIX: 28421905805
+Código PIX (Copia e Cola): ${pixPayload}
 Valor: R$ ${totalAmount.toFixed(2)}
 Beneficiário: Anna Frota
 
@@ -354,7 +358,7 @@ Após a confirmação do pagamento, seu pedido será enviado em até 2 dias úte
 Equipe Treuss
 https://treuss.com
 
-Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar manualmente em seu aplicativo bancário.`;
+Caso tenha problemas com o QR Code, você pode copiar o código PIX acima e colar manualmente em seu aplicativo bancário.`;
 
       } else if (type === 'download') {
         emailSubject = 'Download do eBook - Treuss';
@@ -423,7 +427,7 @@ Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar 
 </body>
 </html>`;
         
-        // Text version for fallback - Correção: Usar o link real
+        // Text version for fallback
         textVersion = `Download do eBook - Treuss
 
 Olá ${name},
