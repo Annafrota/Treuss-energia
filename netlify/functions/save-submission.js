@@ -1,5 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
+const QRCode = require('qrcode');
 
 // Inicializar o Resend com verificação
 let resend;
@@ -11,6 +12,29 @@ try {
   console.log('Resend inicializado com sucesso');
 } catch (err) {
   console.error('Erro ao inicializar Resend:', err.message);
+}
+
+// Função para gerar payload PIX
+function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sao Paulo") {
+  const amountFormatted = amount.toFixed(2);
+  const transactionId = Math.random().toString(36).substring(2, 15);
+  
+  // Formato básico do payload PIX (versão simplificada)
+  const payload = [
+    "000201", // Início do payload
+    "26580014br.gov.bcb.pix", // GUI do PIX
+    "01" + pixKey.length.toString().padStart(2, '0') + pixKey, // Chave PIX
+    "52040000", // Categoria comercial
+    "5303986", // Moeda (986 = BRL)
+    "54" + amountFormatted.length.toString().padStart(2, '0') + amountFormatted, // Valor
+    "5802BR", // País
+    "59" + recipient.length.toString().padStart(2, '0') + recipient, // Nome do beneficiário
+    "60" + city.length.toString().padStart(2, '0') + city, // Cidade
+    "62070503***", // Additional data field
+    "6304" // CRC16
+  ].join('');
+  
+  return payload;
 }
 
 exports.handler = async (event, context) => {
@@ -151,31 +175,225 @@ exports.handler = async (event, context) => {
       console.log('Tentando enviar e-mail para:', email);
       console.log('Usando from email:', process.env.RESEND_FROM_EMAIL);
       
-      let emailSubject, emailHtml;
+      let emailSubject, emailHtml, textVersion;
 
       if (type === 'purchase') {
+        const totalAmount = quantity * 54;
+        
+        // Gerar QR Code PIX em base64
+        let qrCodeImage = '';
+        try {
+          const pixPayload = generatePixPayload('28421905805', totalAmount);
+          qrCodeImage = await QRCode.toDataURL(pixPayload, {
+            width: 256,
+            margin: 1,
+            color: {
+              dark: '#000000',
+              light: '#FFFFFF'
+            }
+          });
+        } catch (qrError) {
+          console.error('Erro ao gerar QR Code:', qrError);
+        }
+
         emailSubject = 'Confirmação de Compra - Treuss';
-        emailHtml = `
-          <h1>Olá, ${name}!</h1>
-          <p>Obrigado por sua compra do livro <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
-          <p>Seu pedido foi registrado com sucesso. Em breve enviaremos um e-mail com o Comprovante de Pedido e instruções de pagamento.</p>
-          <p><strong>Resumo do pedido:</strong></p>
-          <ul>
-            <li>Quantidade: ${quantity} exemplar(es)</li>
-            <li>Valor total: R$ ${(quantity * 54).toFixed(2)}</li>
-          </ul>
-          <p>Atenciosamente,<br>Equipe Treuss</p>
-        `;
+        
+        // HTML version (otimizada para mobile)
+        emailHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Confirmação de Compra - Treuss</title>
+  <style>
+    @media only screen and (max-width: 620px) {
+      table.body table.container {
+        width: 95% !important;
+        max-width: 95% !important;
+      }
+      
+      .header-img {
+        width: 100% !important;
+        height: auto !important;
+      }
+      
+      .button {
+        width: 100% !important;
+      }
+      
+      .two-columns {
+        display: block !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; line-height: 1.6;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" class="container" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #0a0a0a; color: #ffd700; padding: 20px; text-align: center;">
+              <h1 style="margin: 0; font-size: 24px;">Treuss - A Energia Precede a Matéria</h1>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 30px;">
+              <h2 style="color: #333; margin-top: 0;">Olá, ${name}!</h2>
+              <p style="color: #555;">Obrigado por sua compra do livro <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
+              
+              <!-- QR Code Section -->
+              <div style="text-align: center; margin: 30px 0;">
+                <h3 style="color: #333;">Pagamento via PIX</h3>
+                <img src="${qrCodeImage}" alt="QR Code PIX para pagamento" width="256" style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%; height: auto;">
+                <p style="color: #777; font-size: 14px;">Escaneie este QR Code com seu aplicativo bancário</p>
+              </div>
+              
+              <!-- Fallback Information -->
+              <div style="background-color: #f5f5f5; border-radius: 5px; padding: 15px; margin: 20px 0;">
+                <h4 style="color: #333; margin-top: 0;">Caso não consiga escanear o QR Code:</h4>
+                <p style="margin: 10px 0;"><strong>Chave PIX:</strong></p>
+                <p style="background-color: #eee; padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace;">28421905805</p>
+                <p style="margin: 10px 0;"><strong>Valor:</strong> R$ ${totalAmount.toFixed(2)}</p>
+                <p style="margin: 10px 0;"><strong>Beneficiário:</strong> Anna Frota</p>
+              </div>
+              
+              <!-- Order Summary -->
+              <div style="background-color: #fff8e1; border-left: 4px solid #ffd700; padding: 15px; margin: 20px 0;">
+                <h4 style="color: #333; margin-top: 0;">Resumo do pedido:</h4>
+                <p style="margin: 5px 0;"><strong>Quantidade:</strong> ${quantity} exemplar(es)</p>
+                <p style="margin: 5px 0;"><strong>Valor total:</strong> R$ ${totalAmount.toFixed(2)}</p>
+              </div>
+              
+              <p style="color: #555;">Após a confirmação do pagamento, seu pedido será enviado em até 2 dias úteis.</p>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #0a0a0a; color: #fff; padding: 15px; text-align: center; font-size: 12px;">
+              <p style="margin: 0;">Equipe Treuss | <a href="https://treuss.com" style="color: #ffd700; text-decoration: none;">treuss.com</a></p>
+              <p style="margin: 10px 0 0; font-size: 11px; color: #ccc;">Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar manualmente em seu aplicativo bancário.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+        
+        // Text version for fallback
+        textVersion = `Confirmação de Compra - Treuss
+
+Olá ${name},
+
+Obrigado por sua compra do livro "Treuss - A Energia Precede a Matéria".
+
+Para realizar o pagamento via PIX:
+
+Chave PIX: 28421905805
+Valor: R$ ${totalAmount.toFixed(2)}
+Beneficiário: Anna Frota
+
+Resumo do pedido:
+- Quantidade: ${quantity} exemplar(es)
+- Valor total: R$ ${totalAmount.toFixed(2)}
+
+Após a confirmação do pagamento, seu pedido será enviado em até 2 dias úteis.
+
+Equipe Treuss
+https://treuss.com
+
+Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar manualmente em seu aplicativo bancário.`;
+
       } else if (type === 'download') {
         emailSubject = 'Download do eBook - Treuss';
-        emailHtml = `
-          <h1>Olá, ${name}!</h1>
-          <p>Obrigado por baixar o eBook <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
-          <p>Clique no link abaixo para fazer o download:</p>
-          <p><a href="https://drive.google.com/your-download-link" style="background-color: #FFD700; color: black; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Fazer Download</a></p>
-          <p>Chave PIX para contribuição: <strong>28421905805</strong></p>
-          <p>Atenciosamente,<br>Equipe Treuss</p>
-        `;
+        
+        // HTML version
+        emailHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Download do eBook - Treuss</title>
+  <style>
+    @media only screen and (max-width: 620px) {
+      table.body table.container {
+        width: 95% !important;
+        max-width: 95% !important;
+      }
+      
+      .button {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; line-height: 1.6;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" class="container" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #0a0a0a; color: #ffd700; padding: 20px; text-align: center;">
+              <h1 style="margin: 0; font-size: 24px;">Treuss - A Energia Precede a Matéria</h1>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 30px;">
+              <h2 style="color: #333; margin-top: 0;">Olá, ${name}!</h2>
+              <p style="color: #555;">Obrigado por baixar o eBook <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
+              <p style="color: #555;">Clique no link abaixo para fazer o download:</p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://drive.google.com/your-download-link" style="background-color: #ffd700; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Fazer Download do eBook</a>
+              </div>
+              
+              <div style="background-color: #f5f5f5; border-radius: 5px; padding: 15px; margin: 20px 0;">
+                <h4 style="color: #333; margin-top: 0;">Chave PIX para contribuição:</h4>
+                <p style="background-color: #eee; padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace;">28421905805</p>
+                <p style="color: #555;">Sua contribuição ajuda a manter este projeto vivo!</p>
+              </div>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #0a0a0a; color: #fff; padding: 15px; text-align: center; font-size: 12px;">
+              <p style="margin: 0;">Equipe Treuss | <a href="https://treuss.com" style="color: #ffd700; text-decoration: none;">treuss.com</a></p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+        
+        // Text version for fallback
+        textVersion = `Download do eBook - Treuss
+
+Olá ${name},
+
+Obrigado por baixar o eBook "Treuss - A Energia Precede a Matéria".
+
+Para fazer o download, acesse:
+https://drive.google.com/your-download-link
+
+Chave PIX para contribuição: 28421905805
+
+Sua contribuição ajuda a manter este projeto vivo!
+
+Equipe Treuss
+https://treuss.com`;
       }
 
       const { data, error } = await resend.emails.send({
@@ -183,6 +401,7 @@ exports.handler = async (event, context) => {
         to: email,
         subject: emailSubject,
         html: emailHtml,
+        text: textVersion,
       });
 
       if (error) {
