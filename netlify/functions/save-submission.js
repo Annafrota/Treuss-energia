@@ -15,37 +15,36 @@ try {
 }
 
 // Função para calcular CRC16 (obrigatório para PIX)
-function calculateCRC16(str) {
+function calculateCRC16(data) {
   let crc = 0xFFFF;
-  for (let i = 0; i < str.length; i++) {
-    crc ^= str.charCodeAt(i) << 8;
+  for (let i = 0; i < data.length; i++) {
+    crc ^= data.charCodeAt(i) << 8;
     for (let j = 0; j < 8; j++) {
       if (crc & 0x8000) {
         crc = (crc << 1) ^ 0x1021;
       } else {
-        crc = crc << 1;
+        crc <<= 1;
       }
     }
   }
   return crc & 0xFFFF;
 }
 
-// Função para gerar payload PIX correto conforme padrão BCB
-function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sao Paulo", description = "Livro Treuss") {
-  const amountFormatted = amount.toFixed(2);
+// Função para gerar payload PIX correto conforme padrão EMVCo
+function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sao Paulo") {
+  const amountFormatted = parseFloat(amount).toFixed(2);
   
-  // Construir o payload conforme padrão EMVco
+  // Construir o payload conforme padrão EMV
   let payload = "";
   
   // Payload Format Indicator (Obrigatório)
   payload += "000201";
   
   // Merchant Account Information (Obrigatório)
-  let merchantInfo = "";
-  merchantInfo += "0014br.gov.bcb.pix"; // GUI do PIX
-  merchantInfo += "01" + String(pixKey.length).padStart(2, '0') + pixKey; // Chave PIX
+  let merchantAccount = "0014br.gov.bcb.pix"; // GUI do PIX
+  merchantAccount += "01" + String(pixKey.length).padStart(2, '0') + pixKey; // Chave PIX
   
-  payload += "26" + String(merchantInfo.length).padStart(2, '0') + merchantInfo;
+  payload += "26" + String(merchantAccount.length).padStart(2, '0') + merchantAccount;
   
   // Merchant Category Code (Opcional)
   payload += "52040000";
@@ -53,7 +52,7 @@ function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sa
   // Transaction Currency (Obrigatório) - 986 = BRL
   payload += "5303986";
   
-  // Transaction Amount (Obrigatório)
+  // Transaction Amount (Opcional para QR estático, obrigatório para dinâmico)
   payload += "54" + String(amountFormatted.length).padStart(2, '0') + amountFormatted;
   
   // Country Code (Obrigatório) - BR = Brasil
@@ -65,18 +64,19 @@ function generatePixPayload(pixKey, amount, recipient = "Anna Frota", city = "Sa
   // Merchant City (Obrigatório)
   payload += "60" + String(city.length).padStart(2, '0') + city;
   
-  // Additional Data Field - TXID (Opcional)
-  const txid = "***"; // TXID fixo para QR Code estático
-  payload += "62" + String(txid.length + 5).padStart(2, '0') + "05" + String(txid.length).padStart(2, '0') + txid;
+  // Additional Data Field - Reference label (Opcional)
+  const referenceLabel = "***";
+  payload += "62" + String(referenceLabel.length + 4).padStart(2, '0') + "0503" + referenceLabel;
   
-  // CRC16 (Obrigatório)
+  // Adicionar placeholder do CRC16 (será calculado depois)
   payload += "6304";
   
-  // Calcular CRC16
+  // Calcular CRC16 do payload completo (sem o CRC16 final)
   const crc = calculateCRC16(payload);
   const crcHex = crc.toString(16).toUpperCase().padStart(4, '0');
   
-  return payload + crcHex;
+  // Substituir o placeholder pelo CRC16 calculado
+  return payload.slice(0, -4) + crcHex;
 }
 
 exports.handler = async (event, context) => {
@@ -226,6 +226,8 @@ exports.handler = async (event, context) => {
         let qrCodeImage = '';
         try {
           const pixPayload = generatePixPayload('28421905805', totalAmount);
+          console.log('Payload PIX gerado:', pixPayload);
+          
           qrCodeImage = await QRCode.toDataURL(pixPayload, {
             width: 256,
             margin: 1,
@@ -396,7 +398,7 @@ Caso tenha problemas com o QR Code, você pode copiar a chave PIX acima e colar 
               <p style="color: #555;">Clique no link abaixo para fazer o download:</p>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://drive.google.com/your-download-link" style="background-color: #ffd700; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Fazer Download do eBook</a>
+                <a href="https://treus.com/treuss_ebook.pdf" style="background-color: #ffd700; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block;">Fazer Download do eBook</a>
               </div>
               
               <div style="background-color: #f5f5f5; border-radius: 5px; padding: 15px; margin: 20px 0;">
