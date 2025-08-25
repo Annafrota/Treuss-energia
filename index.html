@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Treuss - A Energia Precede a Matéria</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <!-- script src="https://cdn.emailjs.com/sdk/2.4.0/email.min.js"></script -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2091,14 +2090,11 @@
 
   <script>
     /* =========================================================
-     TREUSS LANDING PAGE - SCRIPT ATUALIZADO (Com EmailJS e Replay)
+     TREUSS LANDING PAGE - SCRIPT ATUALIZADO (Com EmailJS + Replay Button)
      ========================================================= */
 
     (function () {
       'use strict';
-
-      // Inicializar EmailJS com sua Public Key
-      emailjs.init("hLyX_AEtuN-5L0Ds0"); // chave pública
 
       document.addEventListener('DOMContentLoaded', () => {
         /* -------------------------------------------------------------------------- */
@@ -2133,17 +2129,16 @@
         };
 
         /* -------------------------------------------------------------------------- */
-        /* 2. TEASER E BOTÃO DE REPLAY                                                */
+        /* 2. TEASER                                                                  */
         /* -------------------------------------------------------------------------- */
         const teaserOverlay = $('#teaser-overlay');
         const teaserVideo = $('#teaser-video');
         const skipButton = $('#skip-teaser');
         const soundButton = $('#toggle-sound');
         const closeButton = $('.teaser-close');
-        const replayButton = $('#replay-teaser');
+        const replayButton = $('#replay-teaser'); // Botão fixo no canto superior direito
 
-        // Função para esconder o teaser e mostrar o botão de replay
-        const hideTeaser = () => {
+        function hideTeaser() {
           if (!teaserOverlay) return;
           teaserOverlay.classList.add('hide');
           document.body.classList.remove('modal-open');
@@ -2151,18 +2146,15 @@
             teaserVideo.pause();
             teaserVideo.currentTime = 0;
           }
-
           // Mostrar o botão de replay
           if (replayButton) {
             replayButton.hidden = false;
           }
-        };
+        }
 
-        // Função para reabrir o teaser
-        const showTeaser = () => {
+        function showTeaser() {
           if (!teaserOverlay || !teaserVideo) return;
 
-          // Reiniciar o vídeo
           teaserVideo.currentTime = 0;
           teaserOverlay.classList.remove('hide');
           document.body.classList.add('modal-open');
@@ -2172,19 +2164,29 @@
           if (replayButton) {
             replayButton.hidden = true;
           }
-        };
+        }
 
-        if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton && replayButton) {
-          skipButton.addEventListener('click', hideTeaser);
+        if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton) {
+          skipButton.addEventListener('click', () => {
+            hideTeaser();
+            if (replayButton) replayButton.hidden = false;
+          });
           teaserVideo.addEventListener('ended', hideTeaser);
-          closeButton.addEventListener('click', hideTeaser);
-          replayButton.addEventListener('click', showTeaser);
+          closeButton.addEventListener('click', () => {
+            hideTeaser();
+            if (replayButton) replayButton.hidden = false;
+          });
           soundButton.addEventListener('click', () => {
             teaserVideo.muted = !teaserVideo.muted;
             soundButton.textContent = teaserVideo.muted ? 'ATIVAR SOM' : 'MUTAR';
           });
           teaserVideo.addEventListener('error', () => setTimeout(hideTeaser, 3000));
           document.body.classList.add('modal-open');
+        }
+
+        // Event listener para o botão de replay
+        if (replayButton) {
+          replayButton.addEventListener('click', showTeaser);
         }
 
         /* -------------------------------------------------------------------------- */
@@ -2310,60 +2312,7 @@
             });
           });
         }
-
-        // Função para enviar email de compra com EmailJS
-        async function sendPurchaseEmail(data) {
-          try {
-            const templateParams = {
-              name: data.name,
-              quantity: data.quantity,
-              address_line1: data.address_line1,
-              address_line2: data.address_line2 || '',
-              district: data.district,
-              city: data.city,
-              state: data.state,
-              postal_code: data.postal_code,
-              country: data.country,
-              delivery_notes: data.delivery_notes || '',
-              total_value: `R$ ${(data.quantity * 54).toFixed(2).replace('.', ',')}`
-            };
-
-            await emailjs.send(
-              "service_viqhu6e", // Service ID
-              "template_gv4q0sc",    // Substitua pelo seu Template ID de compra
-              templateParams
-            );
-
-            console.log('E-mail de compra enviado com sucesso');
-            return true;
-          } catch (error) {
-            console.error('Erro ao enviar e-mail de compra:', error);
-            throw error;
-          }
-        }
-
-        // Função para enviar email de download com EmailJS
-        async function sendDownloadEmail(data) {
-          try {
-            const templateParams = {
-              name: data.name,
-              email: data.email
-            };
-
-            await emailjs.send(
-              "service_viqhu6e", // Substitua pelo seu Service ID
-              "template_6w2zzz8",  // Substitua pelo seu Template ID de download
-              templateParams
-            );
-
-            console.log('E-mail de download enviado com sucesso');
-            return true;
-          } catch (error) {
-            console.error('Erro ao enviar e-mail de download:', error);
-            throw error;
-          }
-        }
-
+        
         // Formulário de compra
         purchaseForm?.addEventListener('submit', async (e) => {
           e.preventDefault();
@@ -2449,21 +2398,6 @@
           try {
             disableFormButton(purchaseForm);
 
-            // Enviar email com EmailJS
-            await sendPurchaseEmail({
-              name,
-              email,
-              quantity: qty,
-              address_line1: addressLine1,
-              address_line2: data.address_line2 || '',
-              district,
-              city,
-              state,
-              postal_code: postalCode,
-              country,
-              delivery_notes: data.delivery_notes || ''
-            });
-
             // Salvar no Supabase (Netlify Function)
             const response = await fetch('/.netlify/functions/save-submission', {
               method: 'POST',
@@ -2537,12 +2471,6 @@
 
           try {
             disableFormButton(downloadForm);
-
-            // Enviar email com EmailJS
-            await sendDownloadEmail({
-              name,
-              email
-            });
 
             // Salvar no Supabase (Netlify Function)
             const response = await fetch('/.netlify/functions/save-submission', {
