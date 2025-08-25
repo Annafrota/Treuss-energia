@@ -157,8 +157,7 @@
       /* Impede que os controles sejam comprimidos */
     }
 
-    .skip-button,
-    .replay-button {
+    .skip-button {
       background: rgba(218, 165, 32, 0.2);
       color: var(--color-treuss-gold);
       border: 2px solid var(--color-treuss-gold);
@@ -173,8 +172,7 @@
       font-size: 0.9rem;
     }
 
-    .skip-button:hover,
-    .replay-button:hover {
+    .skip-button:hover {
       background: var(--color-treuss-gold);
       color: #000;
       transform: translateY(-2px);
@@ -1519,37 +1517,31 @@
     }
 
     /* Botão Replay - Mobile First */
-    .replay-button {
-      position: fixed;
-      top: clamp(10px, 5vw, 20px);
-      /* espaçamento fluido */
-      right: clamp(10px, 5vw, 20px);
-      z-index: 100;
-      width: min(14vw, 60px);
-      /* cresce um pouco em telas pequenas, limite 60px */
-      height: min(14vw, 60px);
-      border-radius: 50%;
-      background-color: rgba(218, 165, 32, 0.25);
-      /* mais visível */
-      border: 2px solid var(--color-treuss-gold);
-      color: var(--color-treuss-gold);
-      cursor: pointer;
+    .replay-wrapper {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.2rem;
-      transition: all 0.3s ease;
-      opacity: 0.8;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      justify-content: flex-end;
+      /* alinha à direita */
+      margin-bottom: 0.5rem;
     }
 
-    /* Hover e Focus para desktop e acessibilidade */
+    .replay-button {
+      background-color: transparent;
+      border: 2px solid var(--color-treuss-gold);
+      color: var(--color-treuss-gold);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0.9;
+    }
+
     .replay-button:hover,
     .replay-button:focus {
       background-color: var(--color-treuss-gold);
       color: #000;
       opacity: 1;
-      transform: scale(1.1);
       outline: none;
     }
 
@@ -1769,6 +1761,13 @@
       <h1>Treuss – A Energia Precede a Matéria</h1>
       <p>Uma ficção distópica iniciática sobre ética, consciência e transformação planetária. Um chamado à luz em tempos
         de colapso.</p>
+      <div class="replay-wrapper">
+
+        <button id="replay-teaser" class="replay-button" aria-label="Assistir teaser novamente" hidden>
+          Replay vídeo
+        </button>
+      </div>
+
       <button onclick="document.getElementById('offer').scrollIntoView({ behavior: 'smooth' })" class="btn">Quero meu
         exemplar</button>
       <div class="scroll-indicator">↓</div>
@@ -2087,10 +2086,6 @@
     </div>
 
   </div>
-  <button id="replay-teaser" class="replay-button" aria-label="Assistir teaser novamente" hidden>
-    <i class="fas fa-redo"></i>
-  </button>
-
 
   <script>
     /* =========================================================
