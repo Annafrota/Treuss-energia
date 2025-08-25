@@ -2091,14 +2091,14 @@
 
   <script>
     /* =========================================================
-     TREUSS LANDING PAGE - SCRIPT ATUALIZADO (Com EmailJS + Replay Button)
+     TREUSS LANDING PAGE - SCRIPT ATUALIZADO (Com EmailJS e Replay)
      ========================================================= */
 
     (function () {
       'use strict';
 
       // Inicializar EmailJS com sua Public Key
-      emailjs.init("hLyX_AEtuN-5L0Ds0");
+      emailjs.init("hLyX_AEtuN-5L0Ds0"); // chave pública
 
       document.addEventListener('DOMContentLoaded', () => {
         /* -------------------------------------------------------------------------- */
@@ -2133,16 +2133,17 @@
         };
 
         /* -------------------------------------------------------------------------- */
-        /* 2. TEASER                                                                  */
+        /* 2. TEASER E BOTÃO DE REPLAY                                                */
         /* -------------------------------------------------------------------------- */
         const teaserOverlay = $('#teaser-overlay');
         const teaserVideo = $('#teaser-video');
         const skipButton = $('#skip-teaser');
         const soundButton = $('#toggle-sound');
         const closeButton = $('.teaser-close');
-        const replayButton = $('#replay-teaser'); // Botão fixo no canto superior direito
+        const replayButton = $('#replay-teaser');
 
-        function hideTeaser() {
+        // Função para esconder o teaser e mostrar o botão de replay
+        const hideTeaser = () => {
           if (!teaserOverlay) return;
           teaserOverlay.classList.add('hide');
           document.body.classList.remove('modal-open');
@@ -2150,15 +2151,18 @@
             teaserVideo.pause();
             teaserVideo.currentTime = 0;
           }
+
           // Mostrar o botão de replay
           if (replayButton) {
             replayButton.hidden = false;
           }
-        }
+        };
 
-        function showTeaser() {
+        // Função para reabrir o teaser
+        const showTeaser = () => {
           if (!teaserOverlay || !teaserVideo) return;
 
+          // Reiniciar o vídeo
           teaserVideo.currentTime = 0;
           teaserOverlay.classList.remove('hide');
           document.body.classList.add('modal-open');
@@ -2168,29 +2172,19 @@
           if (replayButton) {
             replayButton.hidden = true;
           }
-        }
+        };
 
-        if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton) {
-          skipButton.addEventListener('click', () => {
-            hideTeaser();
-            if (replayButton) replayButton.hidden = false;
-          });
+        if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton && replayButton) {
+          skipButton.addEventListener('click', hideTeaser);
           teaserVideo.addEventListener('ended', hideTeaser);
-          closeButton.addEventListener('click', () => {
-            hideTeaser();
-            if (replayButton) replayButton.hidden = false;
-          });
+          closeButton.addEventListener('click', hideTeaser);
+          replayButton.addEventListener('click', showTeaser);
           soundButton.addEventListener('click', () => {
             teaserVideo.muted = !teaserVideo.muted;
             soundButton.textContent = teaserVideo.muted ? 'ATIVAR SOM' : 'MUTAR';
           });
           teaserVideo.addEventListener('error', () => setTimeout(hideTeaser, 3000));
           document.body.classList.add('modal-open');
-        }
-
-        // Event listener para o botão de replay
-        if (replayButton) {
-          replayButton.addEventListener('click', showTeaser);
         }
 
         /* -------------------------------------------------------------------------- */
