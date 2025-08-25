@@ -1,6 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
-const QRCode = require('qrcode');
 
 // Inicializar o Resend com verificação
 let resend;
@@ -223,28 +222,18 @@ exports.handler = async (event, context) => {
       if (type === 'purchase') {
         const totalAmount = quantity * 54;
         
-        // Gerar QR Code PIX e payload
-        let qrCodeImage = '';
-        let pixPayload = ''; // Variável para armazenar o payload
+        // Gerar payload PIX (sem QR Code)
+        let pixPayload = '';
         try {
           pixPayload = generatePixPayload('28421905805', totalAmount);
           console.log('Payload PIX gerado:', pixPayload);
-          
-          qrCodeImage = await QRCode.toDataURL(pixPayload, {
-            width: 256,
-            margin: 1,
-            color: {
-              dark: '#000000',
-              light: '#FFFFFF'
-            }
-          });
-        } catch (qrError) {
-          console.error('Erro ao gerar QR Code:', qrError);
+        } catch (pixError) {
+          console.error('Erro ao gerar payload PIX:', pixError);
         }
 
         emailSubject = 'Confirmação de Compra - Treuss';
         
-        // HTML version (otimizada para mobile) - Alterações no tag <img> e nota no rodapé
+        // HTML version - Sem QR Code, apenas código PIX para copiar e colar
         emailHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -271,6 +260,54 @@ exports.handler = async (event, context) => {
         display: block !important;
         width: 100% !important;
       }
+      
+      .pix-code {
+        font-size: 10px !important;
+        padding: 8px !important;
+      }
+    }
+    
+    .pix-instructions {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid #ffd700;
+    }
+    
+    .pix-code {
+      background-color: #f1f3f4;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      padding: 15px;
+      font-family: monospace;
+      font-size: 12px;
+      word-break: break-all;
+      line-height: 1.4;
+      margin: 15px 0;
+    }
+    
+    .copy-button {
+      background-color: #ffd700;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s;
+    }
+    
+    .copy-button:hover {
+      background-color: #f0c800;
+    }
+    
+    .order-summary {
+      background-color: #fff8e1;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
     }
   </style>
 </head>
@@ -292,32 +329,42 @@ exports.handler = async (event, context) => {
               <h2 style="color: #333; margin-top: 0;">Olá, ${name}!</h2>
               <p style="color: #555;">Obrigado por sua compra do livro <strong>Treuss - A Energia Precede a Matéria</strong>.</p>
               
-              <!-- QR Code Section -->
-              <div style="text-align: center; margin: 30px 0;">
-                <h3 style="color: #333;">Pagamento via PIX</h3>
-                <img src="${qrCodeImage}" alt="QR Code para pagamento PIX" title="QR Code PIX" width="256" height="256" style="display: block; border: 1px solid #ddd; border-radius: 8px; max-width: 100%; height: auto;">
-                <p style="color: #777; font-size: 14px;">Escaneie este QR Code com seu aplicativo bancário</p>
-              </div>
-              
-              <!-- Fallback Information -->
-              <div style="background-color: #f5f5f5; border-radius: 5px; padding: 15px; margin: 20px 0;">
-                <h4 style="color: #333; margin-top: 0;">Caso não consiga escanear o QR Code:</h4>
-                <p style="margin: 10px 0;"><strong>Chave PIX:</strong></p>
-                <p style="background-color: #eee; padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace;">28421905805</p>
-                <p style="margin: 10px 0;"><strong>Código PIX (Copia e Cola):</strong></p>
-                <p style="background-color: #eee; padding: 10px; border-radius: 5px; word-break: break-all; font-family: monospace;">${pixPayload}</p>
-                <p style="margin: 10px 0;"><strong>Valor:</strong> R$ ${totalAmount.toFixed(2)}</p>
-                <p style="margin: 10px 0;"><strong>Beneficiário:</strong> Anna Frota</p>
+              <!-- PIX Payment Instructions -->
+              <div class="pix-instructions">
+                <h3 style="color: #333; margin-top: 0;">Pagamento via PIX</h3>
+                <p style="color: #555;">Para finalizar sua compra, utilize o código PIX abaixo em seu aplicativo bancário:</p>
+                
+                <div class="pix-code" id="pix-payload">
+                  ${pixPayload}
+                </div>
+                
+                <p style="color: #555; font-size: 14px;">
+                  <strong>Como usar:</strong><br>
+                  1. Abra seu aplicativo bancário<br>
+                  2. Acesse a função PIX<br>
+                  3. Selecione "Pagar com PIX Copia e Cola"<br>
+                  4. Cole o código acima e confirme o pagamento
+                </p>
+                
+                <p style="color: #777; font-size: 14px; margin-top: 20px;">
+                  <strong>Valor:</strong> R$ ${totalAmount.toFixed(2)}<br>
+                  <strong>Beneficiário:</strong> Anna Frota
+                </p>
               </div>
               
               <!-- Order Summary -->
-              <div style="background-color: #fff8e1; border-left: 4px solid #ffd700; padding: 15px; margin: 20px 0;">
+              <div class="order-summary">
                 <h4 style="color: #333; margin-top: 0;">Resumo do pedido:</h4>
                 <p style="margin: 5px 0;"><strong>Quantidade:</strong> ${quantity} exemplar(es)</p>
                 <p style="margin: 5px 0;"><strong>Valor total:</strong> R$ ${totalAmount.toFixed(2)}</p>
+                <p style="margin: 5px 0;"><strong>Endereço de entrega:</strong> ${address.address_line1}, ${address.address_line2 || ''} - ${address.district}, ${address.city} - ${address.state}</p>
               </div>
               
               <p style="color: #555;">Após a confirmação do pagamento, seu pedido será enviado em até 2 dias úteis.</p>
+              
+              <p style="color: #777; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px;">
+                Em caso de dúvidas, entre em contato conosco respondendo este e-mail.
+              </p>
             </td>
           </tr>
           
@@ -325,7 +372,6 @@ exports.handler = async (event, context) => {
           <tr>
             <td style="background-color: #0a0a0a; color: #fff; padding: 15px; text-align: center; font-size: 12px;">
               <p style="margin: 0;">Equipe Treuss | <a href="https://treuss.com" style="color: #ffd700; text-decoration: none;">treuss.com</a></p>
-              <p style="margin: 10px 0 0; font-size: 11px; color: #ccc;">Caso o QR Code não apareça, habilite imagens externas nas configurações do Gmail ou use o código PIX acima para copia e cola em seu aplicativo bancário.</p>
             </td>
           </tr>
         </table>
@@ -335,7 +381,7 @@ exports.handler = async (event, context) => {
 </body>
 </html>`;
         
-        // Text version for fallback - Adicionada nota sobre imagens no Gmail
+        // Text version for fallback
         textVersion = `Confirmação de Compra - Treuss
 
 Olá ${name},
@@ -344,18 +390,25 @@ Obrigado por sua compra do livro "Treuss - A Energia Precede a Matéria".
 
 Para realizar o pagamento via PIX:
 
-Chave PIX: 28421905805
-Código PIX (Copia e Cola): ${pixPayload}
+1. Abra seu aplicativo bancário
+2. Acesse a função PIX
+3. Selecione "Pagar com PIX Copia e Cola"
+4. Cole o código abaixo e confirme o pagamento
+
+Código PIX:
+${pixPayload}
+
 Valor: R$ ${totalAmount.toFixed(2)}
 Beneficiário: Anna Frota
 
 Resumo do pedido:
 - Quantidade: ${quantity} exemplar(es)
 - Valor total: R$ ${totalAmount.toFixed(2)}
+- Endereço de entrega: ${address.address_line1}, ${address.address_line2 || ''} - ${address.district}, ${address.city} - ${address.state}
 
 Após a confirmação do pagamento, seu pedido será enviado em até 2 dias úteis.
 
-Caso o QR Code não apareça no e-mail, habilite imagens externas nas configurações do Gmail ou use o código PIX acima para copia e cola.
+Em caso de dúvidas, entre em contato conosco respondendo este e-mail.
 
 Equipe Treuss
 https://treuss.com`;
