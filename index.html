@@ -2051,7 +2051,7 @@
       'use strict';
 
       // Inicializar EmailJS com sua Public Key
-      emailjs.init("hLyX_AEtuN-5L0Ds0"); // chave pública
+      emailjs.init("hLyX_AEtuN-5L0Ds0");
 
       document.addEventListener('DOMContentLoaded', () => {
         /* -------------------------------------------------------------------------- */
@@ -2093,23 +2093,59 @@
         const skipButton = $('#skip-teaser');
         const soundButton = $('#toggle-sound');
         const closeButton = $('.teaser-close');
-        const hideTeaser = () => {
+        const replayButton = $('#replay-teaser'); // Adicionei esta variável
+
+        function hideTeaser() {
           if (!teaserOverlay) return;
           teaserOverlay.classList.add('hide');
           document.body.classList.remove('modal-open');
-          if (teaserVideo) teaserVideo.pause();
-        };
+          if (teaserVideo) {
+            teaserVideo.pause();
+            teaserVideo.currentTime = 0;
+          }
+          // Mostrar o botão de replay
+          if (replayButton) {
+            replayButton.hidden = false;
+          }
+        }
+
+        // Adicionei esta função para reabrir o teaser
+        function showTeaser() {
+          if (!teaserOverlay || !teaserVideo) return;
+
+          // Reiniciar o vídeo
+          teaserVideo.currentTime = 0;
+          teaserOverlay.classList.remove('hide');
+          document.body.classList.add('modal-open');
+          teaserVideo.play();
+
+          // Esconder o botão de replay durante a reprodução
+          if (replayButton) {
+            replayButton.hidden = true;
+          }
+        }
 
         if (teaserOverlay && teaserVideo && skipButton && soundButton && closeButton) {
-          skipButton.addEventListener('click', hideTeaser);
+          skipButton.addEventListener('click', () => {
+            hideTeaser();
+            if (replayButton) replayButton.hidden = false;
+          });
           teaserVideo.addEventListener('ended', hideTeaser);
-          closeButton.addEventListener('click', hideTeaser);
+          closeButton.addEventListener('click', () => {
+            hideTeaser();
+            if (replayButton) replayButton.hidden = false;
+          });
           soundButton.addEventListener('click', () => {
             teaserVideo.muted = !teaserVideo.muted;
             soundButton.textContent = teaserVideo.muted ? 'ATIVAR SOM' : 'MUTAR';
           });
           teaserVideo.addEventListener('error', () => setTimeout(hideTeaser, 3000));
           document.body.classList.add('modal-open');
+        }
+
+        // Adicione este event listener para o botão de replay
+        if (replayButton) {
+          replayButton.addEventListener('click', showTeaser);
         }
 
         /* -------------------------------------------------------------------------- */
